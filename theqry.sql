@@ -1,0 +1,247 @@
+WITH
+
+ w_bools AS (
+SELECT Category, id, Value FROM
+(
+SELECT CAST(NULL AS VARCHAR(40)) as Category
+,      CAST(NULL AS INT) AS id
+,      CAST(NULL AS VARCHAR(30)) AS Value
+UNION ALL
+SELECT 'concert_management'   ,76 ,'interested_in'   UNION ALL
+SELECT 'concert_management'   ,86 ,'interested_in'   UNION ALL
+SELECT 'concert_management'   ,92 ,'currently_doing' UNION ALL
+SELECT 'development'          ,9  ,'currently_doing' UNION ALL
+SELECT 'development'          ,77 ,'currently_doing' UNION ALL
+SELECT 'development'          ,83 ,'interested_in'   UNION ALL
+SELECT 'development'          ,92 ,'interested_in'   UNION ALL
+SELECT 'finance'              ,3  ,'currently_doing' UNION ALL
+SELECT 'finance'              ,8  ,'interested_in'   UNION ALL
+SELECT 'finance'              ,77 ,'interested_in'   UNION ALL
+SELECT 'hospitality'          ,12 ,'interested_in'   UNION ALL
+SELECT 'hospitality'          ,14 ,'currently_doing' UNION ALL
+SELECT 'investment'           ,3  ,'currently_doing' UNION ALL
+SELECT 'investment'           ,77 ,'interested_in'   UNION ALL
+SELECT 'marketing'            ,75 ,'currently_doing' UNION ALL
+SELECT 'marketing'            ,83 ,'interested_in'   UNION ALL
+SELECT 'marketing'            ,92 ,'interested_in'   UNION ALL
+SELECT 'membership'           ,3  ,'currently_doing' UNION ALL
+SELECT 'membership'           ,7  ,'currently_doing' UNION ALL
+SELECT 'membership'           ,11 ,'currently_doing' UNION ALL
+SELECT 'membership'           ,13 ,'currently_doing' UNION ALL
+SELECT 'membership'           ,13 ,'interested_in'   UNION ALL
+SELECT 'membership'           ,76 ,'interested_in'   UNION ALL
+SELECT 'membership'           ,79 ,'currently_doing' UNION ALL
+SELECT 'membership'           ,82 ,'interested_in'   UNION ALL
+SELECT 'membership'           ,83 ,'interested_in'   UNION ALL
+SELECT 'membership'           ,92 ,'interested_in'   UNION ALL
+SELECT 'outreach'             ,3  ,'currently_doing' UNION ALL
+SELECT 'outreach'             ,12 ,'currently_doing' UNION ALL
+SELECT 'outreach'             ,77 ,'currently_doing' UNION ALL
+SELECT 'outreach'             ,90 ,'interested_in'   UNION ALL
+SELECT 'outreach'             ,92 ,'interested_in'   UNION ALL
+SELECT 'program_book'         ,3  ,'currently_doing' UNION ALL
+SELECT 'program_book'         ,20 ,'interested_in'   UNION ALL
+SELECT 'program_book'         ,80 ,'currently_doing' UNION ALL
+SELECT 'program_book'         ,83 ,'interested_in'   UNION ALL
+SELECT 'program_book'         ,89 ,'currently_doing' UNION ALL
+SELECT 'program_book'         ,90 ,'currently_doing' UNION ALL
+SELECT 'program_book'         ,92 ,'interested_in'   UNION ALL
+SELECT 'program_committee'    ,3  ,'currently_doing' UNION ALL
+SELECT 'program_committee'    ,92 ,'currently_doing' UNION ALL
+SELECT 'rehearsal_management' ,17 ,'interested_in'   UNION ALL
+SELECT 'rehearsal_management' ,83 ,'interested_in'   UNION ALL
+SELECT 'rehearsal_management' ,87 ,'interested_in'   UNION ALL
+SELECT 'tech_support'         ,13 ,'interested_in'   UNION ALL
+SELECT 'tech_support'         ,15 ,'interested_in'   UNION ALL
+SELECT 'tech_support'         ,82 ,'currently_doing' UNION ALL
+SELECT 'tech_support'         ,83 ,'interested_in'   UNION ALL
+SELECT 'tech_support'         ,87 ,'interested_in' 
+) t WHERE id IS NOT NULL
+)
+
+,w_development AS (SELECT id, value FROM w_bools WHERE category = 'development')
+
+-- ,w_finance AS
+-- (
+-- )
+
+-- ,w_hospitality AS
+-- (
+-- )
+
+-- ,w_investment AS
+-- (
+-- )
+
+-- ,w_marketing AS
+-- (
+-- )
+
+-- ,w_membership AS
+-- (
+-- )
+
+-- ,w_outreach AS
+-- (
+-- )
+
+-- ,w_program_book AS
+-- (
+-- )
+
+-- ,w_program_committee AS
+-- (
+-- )
+
+-- ,w_rehearsal_management AS
+-- (
+-- )
+
+-- ,w_tech_support AS
+-- (
+-- )
+
+
+, w_phones AS (
+SELECT id, type, number FROM (
+SELECT CAST(NULL AS INT) AS id
+,      CAST(NULL AS VARCHAR(1)) AS type
+,      CAST(NULL AS VARCHAR(12)) as number
+UNION ALL
+SELECT 2,'M','617-875-7391' UNION ALL
+SELECT 3,'H','617-965-1331' UNION ALL
+SELECT 4,'M','413-345-1906' UNION ALL
+SELECT 5,'H','781-641-2823' UNION ALL
+SELECT 5,'W','617-484-4447' UNION ALL
+SELECT 5,'M','617-429-3933' UNION ALL
+SELECT 6,'M','617-259-8800' UNION ALL
+SELECT 7,'M','781-760-6210' UNION ALL
+SELECT 8,'M','505-930-0667' UNION ALL
+SELECT 9,'H','781-641-3235' UNION ALL
+SELECT 9,'M','781-266-8802' UNION ALL
+SELECT 10,'H','617-332-4649' UNION ALL
+SELECT 10,'M','617-332-4649' UNION ALL
+SELECT 11,'H','617-244-0878' UNION ALL
+SELECT 11,'M','425-444-7714' UNION ALL
+SELECT 12,'M','617-312-3835' UNION ALL
+SELECT 13,'M','360-296-5854' UNION ALL
+SELECT 14,'H','617-527-6430' UNION ALL
+SELECT 15,'H','617-795-2311' UNION ALL
+SELECT 15,'M','617-877-0787' UNION ALL
+SELECT 16,'M','617-899-3189' UNION ALL
+SELECT 17,'M','617-513-1540' UNION ALL
+SELECT 18,'M','617-571-3393' UNION ALL
+SELECT 19,'H','908-642-3140' UNION ALL
+SELECT 20,'H','617-536-1684' UNION ALL
+SELECT 20,'W','617-747-2578' UNION ALL
+SELECT 20,'M','617-448-0926' UNION ALL
+SELECT 21,'U','Private' UNION ALL
+SELECT 22,'U','Unknown' UNION ALL
+SELECT 23,'H','617-429-3683' UNION ALL
+SELECT 24,'M','617-981-1820' UNION ALL
+SELECT 25,'M','603-498-3433' UNION ALL
+SELECT 26,'H','617-527-0297' UNION ALL
+SELECT 26,'M','617-935-1658' UNION ALL
+SELECT 27,'H','617-332-1259' UNION ALL
+SELECT 27,'M','617-943-9495' UNION ALL
+SELECT 28,'H','617-965-3645' UNION ALL
+SELECT 28,'M','617-461-3202' UNION ALL
+SELECT 29,'H','617-645-3186' UNION ALL
+SELECT 29,'M','617-645-3186' UNION ALL
+SELECT 30,'M','774-313-9875' UNION ALL
+SELECT 31,'H','617-332-6920' UNION ALL
+SELECT 31,'M','617-599-8596' UNION ALL
+SELECT 32,'H','617-332-8795' UNION ALL
+SELECT 32,'M','617-230-9049' UNION ALL
+SELECT 33,'M','781-962-6950' UNION ALL
+SELECT 34,'M','617-800-7614' UNION ALL
+SELECT 35,'H','781-444-2272' UNION ALL
+SELECT 35,'M','339-225-0570' UNION ALL
+SELECT 36,'H','781-861-8432' UNION ALL
+SELECT 36,'M','781-640-3571' UNION ALL
+SELECT 37,'H','617-796-8998' UNION ALL
+SELECT 37,'M','617-669-2687' UNION ALL
+SELECT 38,'H','617-964-5956' UNION ALL
+SELECT 38,'W','617-373-3531' UNION ALL
+SELECT 39,'H','617-489-0699' UNION ALL
+SELECT 39,'W','617-253-8760' UNION ALL
+SELECT 40,'M','401-301-6386' UNION ALL
+SELECT 41,'H','508-358-5712' UNION ALL
+SELECT 41,'M','774-244-6168' UNION ALL
+SELECT 42,'M','617-610-8897' UNION ALL
+SELECT 43,'H','978-264-0742' UNION ALL
+SELECT 43,'M','617-281-9020' UNION ALL
+SELECT 44,'M','774-266-6998' UNION ALL
+SELECT 45,'M','617-755-9074' UNION ALL
+SELECT 46,'H','508-879-5043' UNION ALL
+SELECT 47,'M','617 512 5884' UNION ALL
+SELECT 48,'H','781-862-2894' UNION ALL
+SELECT 48,'M','781-405-3859' UNION ALL
+SELECT 49,'H','617-734-7835' UNION ALL
+SELECT 49,'W','617-422-4526' UNION ALL
+SELECT 50,'M','773-849-6307' UNION ALL
+SELECT 51,'H','781-894-9181' UNION ALL
+SELECT 51,'M','781-296-1863' UNION ALL
+SELECT 52,'M','413-244-6180' UNION ALL
+SELECT 53,'M','617-599-9301' UNION ALL
+SELECT 54,'H','Unknown' UNION ALL
+SELECT 55,'M','617-777-0778' UNION ALL
+SELECT 56,'H','339-777-5111' UNION ALL
+SELECT 57,'H','339-777-5111' UNION ALL
+SELECT 58,'M','508-361-6529' UNION ALL
+SELECT 59,'H','617-965-2760' UNION ALL
+SELECT 59,'W','617-965-5615' UNION ALL
+SELECT 59,'M','617-529-6676' UNION ALL
+SELECT 60,'M','617-455-5335' UNION ALL
+SELECT 61,'M','703-282-8649' UNION ALL
+SELECT 62,'M','570-994-6651' UNION ALL
+SELECT 63,'W','617-373-5076' UNION ALL
+SELECT 63,'M','617-505-7538' UNION ALL
+SELECT 64,'U','Private' UNION ALL
+SELECT 65,'M','339-237-2690' UNION ALL
+SELECT 66,'M','617-216-8912' UNION ALL
+SELECT 67,'M','617-851-5528' UNION ALL
+SELECT 68,'H','781-646-0424' UNION ALL
+SELECT 68,'M','339-222-2456' UNION ALL
+SELECT 69,'M','617-838-3502' UNION ALL
+SELECT 70,'M','781-223-0451' UNION ALL
+SELECT 71,'H','617-964-4164' UNION ALL
+SELECT 71,'M','617-448-2668' UNION ALL
+SELECT 72,'H','617-332-2403' UNION ALL
+SELECT 72,'M','617-803-2131' UNION ALL
+SELECT 73,'H','617-964-8188' UNION ALL
+SELECT 73,'M','617-584-8021' UNION ALL
+SELECT 74,'M','617-952-3972' UNION ALL
+SELECT 75,'M','339 223 7482' UNION ALL
+SELECT 76,'M','617-910-9561' UNION ALL
+SELECT 77,'H','617-566-2387' UNION ALL
+SELECT 78,'M','917-494-7808' UNION ALL
+SELECT 79,'H','978-263-7010' UNION ALL
+SELECT 79,'M','781-530-7759' UNION ALL
+SELECT 80,'H','617-244-2890' UNION ALL
+SELECT 80,'W','617-253-3405' UNION ALL
+SELECT 81,'M','781-707-8583' UNION ALL
+SELECT 82,'M','781-248-0208' UNION ALL
+SELECT 83,'H','617-539-0751' UNION ALL
+SELECT 83,'M','917-945-1078' UNION ALL
+SELECT 84,'M','617-921-7022' UNION ALL
+SELECT 85,'M','781-813-9440' UNION ALL
+SELECT 86,'H','617-244-6715' UNION ALL
+SELECT 86,'M','617-803-1442' UNION ALL
+SELECT 87,'M','617-784-7087' UNION ALL
+SELECT 88,'M','845-443-1171' UNION ALL
+SELECT 89,'H','617-965-4496' UNION ALL
+SELECT 89,'W','617-596-6415' UNION ALL
+SELECT 89,'M','617-596-6415' UNION ALL
+SELECT 90,'M','857-205-7122' UNION ALL
+SELECT 91,'H','781-347-4883' UNION ALL
+SELECT 91,'M','781-690-8644' UNION ALL
+SELECT 92,'M','413-475-0582'
+) t WHERE id IS NOT NULL)
+
+-- SELECT w_phones.id
+-- ,      w_phones.type
+-- ,      w_phones.number
+-- FROM w_phones
+
+SELECT * FROM w_development
