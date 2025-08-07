@@ -28,7 +28,7 @@ SELECT 'membership'           ,3  ,'currently_doing' UNION ALL
 SELECT 'membership'           ,7  ,'currently_doing' UNION ALL
 SELECT 'membership'           ,11 ,'currently_doing' UNION ALL
 SELECT 'membership'           ,13 ,'currently_doing' UNION ALL
-SELECT 'membership'           ,13 ,'interested_in'   UNION ALL
+-- SELECT 'membership'           ,13 ,'interested_in'   UNION ALL
 SELECT 'membership'           ,76 ,'interested_in'   UNION ALL
 SELECT 'membership'           ,79 ,'currently_doing' UNION ALL
 SELECT 'membership'           ,82 ,'interested_in'   UNION ALL
@@ -59,51 +59,30 @@ SELECT 'tech_support'         ,87 ,'interested_in'
 ) t WHERE id IS NOT NULL
 )
 
-,w_development AS (SELECT id, value FROM w_bools WHERE category = 'development')
-
--- ,w_finance AS
--- (
--- )
-
--- ,w_hospitality AS
--- (
--- )
-
--- ,w_investment AS
--- (
--- )
-
--- ,w_marketing AS
--- (
--- )
-
--- ,w_membership AS
--- (
--- )
-
--- ,w_outreach AS
--- (
--- )
-
--- ,w_program_book AS
--- (
--- )
-
--- ,w_program_committee AS
--- (
--- )
-
--- ,w_rehearsal_management AS
--- (
--- )
-
--- ,w_tech_support AS
--- (
--- )
+,w_development           AS (SELECT id, value FROM w_bools WHERE category = 'development')
+,w_finance               AS (SELECT id, value FROM w_bools WHERE category = 'finance')
+,w_hospitality           AS (SELECT id, value FROM w_bools WHERE category = 'hospitality')
+,w_investment            AS (SELECT id, value FROM w_bools WHERE category = 'investment')
+,w_marketing             AS (SELECT id, value FROM w_bools WHERE category = 'marketing')
+,w_membership            AS (SELECT id, value FROM w_bools WHERE category = 'membership')
+,w_outreach              AS (SELECT id, value FROM w_bools WHERE category = 'outreach')
+,w_program_book          AS (SELECT id, value FROM w_bools WHERE category = 'program_book')
+,w_program_committee     AS (SELECT id, value FROM w_bools WHERE category = 'program_committee')
+,w_rehearsal_management  AS (SELECT id, value FROM w_bools WHERE category = 'rehearsal_management')
+,w_tech_support          AS (SELECT id, value FROM w_bools WHERE category = 'tech_support')
 
 
 , w_phones AS (
-SELECT id, type, number FROM (
+SELECT id
+,      MAX(cell_phone) AS cell_phone
+,      MAX(home_phone) AS home_phone
+,      MAX(work_phone) AS work_phone
+FROM (
+SELECT id
+,      CASE WHEN type = 'M' THEN number ELSE NULL END AS cell_phone
+,      CASE WHEN type = 'H' THEN number ELSE NULL END AS home_phone
+,      CASE WHEN type = 'W' THEN number ELSE NULL END AS work_phone
+FROM (
 SELECT CAST(NULL AS INT) AS id
 ,      CAST(NULL AS VARCHAR(1)) AS type
 ,      CAST(NULL AS VARCHAR(12)) as number
@@ -237,11 +216,36 @@ SELECT 90,'M','857-205-7122' UNION ALL
 SELECT 91,'H','781-347-4883' UNION ALL
 SELECT 91,'M','781-690-8644' UNION ALL
 SELECT 92,'M','413-475-0582'
-) t WHERE id IS NOT NULL)
+) t WHERE id IS NOT NULL) t
+GROUP BY id
+)
 
--- SELECT w_phones.id
--- ,      w_phones.type
--- ,      w_phones.number
--- FROM w_phones
+SELECT w_phones.id
+,      w_phones.cell_phone
+,      w_phones.home_phone
+,      w_phones.work_phone
+,      w_development.value           AS development
+,      w_finance.value               AS finance
+,      w_hospitality.value           AS hospitality
+,      w_investment.value            AS investment
+,      w_marketing.value             AS marketing
+,      w_membership.value            AS membership
+,      w_outreach.value              AS outreach
+,      w_program_book.value          AS program_book
+,      w_program_committee.value     AS program_committee
+,      w_rehearsal_management.value  AS rehearsal_management
+,      w_tech_support.value          AS tech_support
+FROM w_phones
+LEFT OUTER JOIN w_development           ON w_phones.id = w_development.id
+LEFT OUTER JOIN w_finance               ON w_phones.id = w_finance.id
+LEFT OUTER JOIN w_hospitality           ON w_phones.id = w_hospitality.id
+LEFT OUTER JOIN w_investment            ON w_phones.id = w_investment.id
+LEFT OUTER JOIN w_marketing             ON w_phones.id = w_marketing.id
+LEFT OUTER JOIN w_membership            ON w_phones.id = w_membership.id
+LEFT OUTER JOIN w_outreach              ON w_phones.id = w_outreach.id
+LEFT OUTER JOIN w_program_book          ON w_phones.id = w_program_book.id
+LEFT OUTER JOIN w_program_committee     ON w_phones.id = w_program_committee.id
+LEFT OUTER JOIN w_rehearsal_management  ON w_phones.id = w_rehearsal_management.id
+LEFT OUTER JOIN w_tech_support          ON w_phones.id = w_tech_support.id
 
-SELECT * FROM w_development
+-- SELECT * FROM w_development
