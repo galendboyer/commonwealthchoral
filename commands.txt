@@ -1,0 +1,16 @@
+python Python/xlsx_qry.py -f "g:\Shared drives\Contact Management\Data\Roster.xlsx" -P db --dbconfigkey gboyer --dbname chorus --tablename t_202507                -s t_202507
+python Python/xlsx_qry.py -f "g:\Shared drives\Contact Management\Data\Roster.xlsx" -P db --dbconfigkey gboyer --dbname chorus --tablename t_202504                -s t_202504 
+python Python/xlsx_qry.py -f "g:\Shared drives\Contact Management\Data\Roster.xlsx" -P db --dbconfigkey gboyer --dbname chorus --tablename t_202504_Plus_Volunteer -s t_202504_Plus_Volunteer 
+python Python/xlsx_qry.py -f "g:\Shared drives\Contact Management\Data\Roster.xlsx" -P db --dbconfigkey gboyer --dbname chorus --tablename t_MemberDB_V2           -s t_MemberDB_V2 
+python Python/xlsx_qry.py -f "g:\Shared drives\Contact Management\Data\Roster.xlsx" -P db --dbconfigkey gboyer --dbname chorus --tablename t_MemberDB_FullInfo     -s t_MemberDB_FullInfo 
+
+python Python/xlsx_qry.py -f "g:\Shared drives\Contact Management\Data\Comp_Ticket.xlsx" -P db --dbconfigkey gboyer --dbname chorus --tablename t_2023_2024 -s t_2023_2024 
+python Python/xlsx_qry.py -f "g:\Shared drives\Contact Management\Data\Comp_Ticket.xlsx" -P db --dbconfigkey gboyer --dbname chorus --tablename t_2024_2025 -s t_2024_2025 
+
+python Python/xlsx_qry.py -f "g:\Shared drives\Contact Management\Data\Postal_Mailing_Of_Patron_202506.xlsx" -P db --dbconfigkey gboyer --dbname chorus --tablename t_Records        -s t_Records
+python Python/xlsx_qry.py -f "g:\Shared drives\Contact Management\Data\Postal_Mailing_Of_Patron_202506.xlsx" -P db --dbconfigkey gboyer --dbname chorus --tablename t_Non_NewEngland -s t_Non_NewEngland
+python Python/xlsx_qry.py -f "g:\Shared drives\Contact Management\Data\Postal_Mailing_Of_Patron_202506.xlsx" -P db --dbconfigkey gboyer --dbname chorus --tablename t_Key_To_Source  -s t_Key_To_Source
+
+python Python/sqls_qry.py -R gboyer -D chorus -f "g:\Shared drives\Contact Management\github\v_Chorus.sql
+
+python Python/sqls_qry.py -J -R gboyer -D chorus -f "g:\Shared drives\Contact Management\github\extract_chorus.sql" -P xlsx -o import_contact_1.xlsx

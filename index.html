@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      table, th, td {
+          border: 2px solid black;
+          border-collapse: collapse;
+          .alnright { text-align: right; }
+      }
+    </style>
+  </head>
+
+  <center>
+
+    <td class='alnright'>
+      <button onClick="window.location.href=window.location.href">R</button>
+    </td>
+    <select onchange="(this.options[this.selectedIndex].value?  window.open(this.options[this.selectedIndex].value,'_blank'):'')">
+      <option value='' > Donor Snap...</option>
+      <b><option disabled class="separator"></option></b>
+    
+      <option value='https://donorsnap.com/'>Home</option>
+      <option value='https://app.donorsnap.com/Login.aspx'>Login</option>
+      <option value='https://donorsnap.com/support/docs/getting-started-101-introduction/?seq_no=2'>Training</option>
+      <option value='https://donorsnap.com/nonprofit-crm-software/'>CRM</option>
