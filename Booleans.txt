@@ -1,0 +1,82 @@
+
+Concert Management
+76	Interested in
+86	Interested in
+92	Currently doing
+
+Develepmont
+9	Currently doing
+77	Currently doing
+83	Interested in
+92	Interested in
+
+Finance
+3	Currently doing
+8	Interested in
+77	Interested in
+
+Hospitality
+12	Interested in
+14	Currently doing
+
+Investment
+3	Currently doing
+77	Interested in
+
+Marketing
+75	Currently doing
+83	Interested in
+92	Interested in
+
+
+Membership
+3	Currently doing
+7	Currently doing
+11	Currently doing
+13	Currently doing, Interested in
+76	Interested in
+79	Currently doing
+82	Interested in
+83	Interested in
+92	Interested in
+
+
+Outreach
+3	Currently doing
+12	Currently doing
+77	Currently doing
+90	Interested in
+92	Interested in
+
+
+Program Book
+3	Currently doing
+20	Interested in
+80	Currently doing
+83	Interested in
+89	Currently doing
+90	Currently doing
+92	Interested in
+
+
+Program Committee
+3	Currently doing
+92	Currently doing
+
+
+Rehearsal Management
+17	Interested in
+83	Interested in
+87	Interested in
+
+
+Tech Support
+13	Interested in
+15	Interested in
+82	Currently doing
+83	Interested in
+87	Interested in
+
+
+Website_and_SocialMedia
+
