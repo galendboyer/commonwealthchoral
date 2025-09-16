@@ -1,8 +1,12 @@
+DROP VIEW IF EXISTS v_Chorus
+go
+CREATE VIEW v_Chorus
+AS
 WITH
 
  w_email AS (SELECT DISTINCT(email) FROM v_email)
 
-,w_select AS (
+,w_join AS (
 SELECT
        w_email.email AS email
 ,       CASE WHEN v1."Full Name" IS NOT NULL THEN v1."Full Name"
@@ -33,11 +37,27 @@ LEFT OUTER JOIN t_202507 v3
 ON w_email.email = v3.email
 )
 
+,w_split AS (
 SELECT
         email
 ,       "Full Name"
+,       LEFT("Full Name", CHARINDEX(',', "Full Name") - 1) AS "Last Name"
+,       LTRIM(RIGHT("Full Name", LEN("Full Name") - CHARINDEX(',', "Full Name"))) AS "First Name"
 ,       "Voice Part"
 ,       CASE WHEN "Paid Staff" IS NULL THEN 'N' ELSE "Paid Staff" END AS "Paid Staff"
 ,       "Active"
 ,       "Address"
-FROM w_select
+FROM w_join
+)
+
+SELECT
+        email
+,       "Last Name"
+,       CASE WHEN "First Name" LIKE '% %' THEN LEFT("First Name", CHARINDEX(' ', "First Name") - 1) ELSE "First Name" END AS "First Name"
+,       CASE WHEN "First Name" LIKE '% %' THEN LTRIM(RIGHT("First Name", LEN("First Name") - CHARINDEX(' ', "First Name"))) ELSE NULL END  AS "Middle Name"
+,       "Voice Part"
+,       "Paid Staff"
+,       "Active"
+,       "Address"
+FROM w_split
+go
