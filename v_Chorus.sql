@@ -46,18 +46,36 @@ SELECT
 ,       "Voice Part"
 ,       CASE WHEN "Paid Staff" IS NULL THEN 'N' ELSE "Paid Staff" END AS "Paid Staff"
 ,       "Active"
-,       "Address"
+,       MAX(CASE WHEN s.ordinal = 1 THEN TRIM(s.value) END) AS Address1
+,       MAX(CASE WHEN s.ordinal = 2 THEN TRIM(s.value) END) AS Address2
+,       MAX(CASE WHEN s.ordinal = 3 THEN TRIM(s.value) END) AS City
+,       MAX(CASE WHEN s.ordinal = 4 THEN TRIM(s.value) END) AS State
+,       MAX(CASE WHEN s.ordinal = 5 THEN TRIM(s.value) END) AS ZIP
+,       "address"
 FROM w_join
+CROSS APPLY STRING_SPLIT(w_join."address", ',', 1) AS s
+GROUP BY
+    w_join.email,
+    w_join."Full Name",
+    w_join."Voice Part",
+    w_join."Paid Staff",
+    w_join."Active",
+    w_join."address"
 )
 
 SELECT
         email
-,       "Last Name"
-,       CASE WHEN "First Name" LIKE '% %' THEN LEFT("First Name", CHARINDEX(' ', "First Name") - 1) ELSE "First Name" END AS "First Name"
-,       CASE WHEN "First Name" LIKE '% %' THEN LTRIM(RIGHT("First Name", LEN("First Name") - CHARINDEX(' ', "First Name"))) ELSE NULL END  AS "Middle Name"
+,       "Last Name" AS Last
+,       CASE WHEN "First Name" LIKE '% %' THEN LEFT("First Name", CHARINDEX(' ', "First Name") - 1) ELSE "First Name" END AS First
+,       CASE WHEN "First Name" LIKE '% %' THEN LTRIM(RIGHT("First Name", LEN("First Name") - CHARINDEX(' ', "First Name"))) ELSE NULL END  AS Middle
 ,       "Voice Part"
 ,       "Paid Staff"
 ,       "Active"
+,       Address1
+,       Address2
+,       City
+,       State
+,       ZIP
 ,       "Address"
 FROM w_split
 go
