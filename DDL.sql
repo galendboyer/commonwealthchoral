@@ -173,3 +173,27 @@ CREATE TABLE t_Key_To_Source
 ,File_Name   VARCHAR(100)
 )
 go
+
+ 
+DROP TABLE IF EXISTS t_Intuit
+go
+CREATE TABLE t_Intuit
+(
+ Full_Name   VARCHAR(100)
+,Intuit_Key   VARCHAR(10)
+,is_a_company VARCHAR(1)
+,Fixed_Name   VARCHAR(100)
+,Matched VARCHAR(1)
+)
+go
+
+
+DROP TABLE IF EXISTS t_donor_snap_integrate
+go
+CREATE TABLE t_donor_snap_integrate
+(
+ Full_Name   VARCHAR(100)
+,Customer_ID   VARCHAR(10)
+,Email      VARCHAR(100)
+)
+go

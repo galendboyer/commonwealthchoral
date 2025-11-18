@@ -12,6 +12,15 @@
 
   <center>
 
+    <a href="https://www.google.com"
+       target="_blank">Google</a> <b>|</b>
+    <a href="https://chatgpt.com"
+       target="_blank">ChatGPT</a> |
+    <a href=" https://copilot.microsoft.com"
+       target="_blank">CoPilot</a> |
+
+    <hr>
+    
     <td class='alnright'>
       <button onClick="window.location.href=window.location.href">R</button>
     </td>
@@ -23,3 +32,11 @@
       <option value='https://app.donorsnap.com/Login.aspx'>Login</option>
       <option value='https://donorsnap.com/support/docs/getting-started-101-introduction/?seq_no=2'>Training</option>
       <option value='https://donorsnap.com/nonprofit-crm-software/'>CRM</option>
+    </select>
+    
+    <select onchange="(this.options[this.selectedIndex].value?  window.open(this.options[this.selectedIndex].value,'_blank'):'')">
+      <option value='' > Intuit...</option>
+      <b><option disabled class="separator"></option></b>
+      <option value='https://accounts.intuit.com/app/sign-in?app_group=QBO&asset_alias=Intuit.accounting.core.qbowebapp&app_environment=prod'>Intuit</option>
+      <option value='https://developer.intuit.com/app/developer/qbo/docs/develop'>Developer Resources</option>
+    </select>

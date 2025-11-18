@@ -65,6 +65,7 @@ GROUP BY
 
 SELECT
         email
+,       "Full Name"        
 ,       "Last Name" AS Last
 ,       CASE WHEN "First Name" LIKE '% %' THEN LEFT("First Name", CHARINDEX(' ', "First Name") - 1) ELSE "First Name" END AS First
 ,       CASE WHEN "First Name" LIKE '% %' THEN LTRIM(RIGHT("First Name", LEN("First Name") - CHARINDEX(' ', "First Name"))) ELSE NULL END  AS Middle
