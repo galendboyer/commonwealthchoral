@@ -35,6 +35,8 @@ LEFT OUTER JOIN t_MemberDB_V2 v2
 ON w_email.email = v2.email
 LEFT OUTER JOIN t_202507 v3
 ON w_email.email = v3.email
+LEFT OUTER JOIN t_Subscribed_Emails v4
+ON w_email.email = v4.email
 )
 
 ,w_split AS (

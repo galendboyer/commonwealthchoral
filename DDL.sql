@@ -39,6 +39,34 @@ CREATE TABLE t_MemberDB_V2
 )
 go
 
+DROP TABLE IF EXISTS t_Volunteer_Responses
+go
+CREATE TABLE t_Volunteer_Responses
+(
+ Timestp                    VARCHAR(100) NOT NULL
+,Email                      VARCHAR(100) NOT NULL
+,Name                       VARCHAR(100)
+,Occupation                 VARCHAR(8000)
+,Retired                    VARCHAR(3)
+,Skills_Interests           VARCHAR(MAX)
+,Ad_Campaign                VARCHAR(1000)
+,Board_of_Directors         VARCHAR(1000)
+,Concert_Management         VARCHAR(1000)
+,Development                VARCHAR(1000)
+,Finance                    VARCHAR(1000)
+,Hospitality_Social         VARCHAR(1000)
+,Investment                 VARCHAR(1000)
+,Marketing                  VARCHAR(1000)
+,Membership                 VARCHAR(1000)
+,Outreach                   VARCHAR(1000)
+,Program_Book               VARCHAR(1000)
+,Program_Committee          VARCHAR(1000)
+,Rehearsal_Management       VARCHAR(1000)
+,Technology_Support         VARCHAR(1000)
+,Website_and_SocialMedia    VARCHAR(1000)
+)
+go
+
 DROP TABLE IF EXISTS t_202504_Plus_Volunteer
 go
 CREATE TABLE t_202504_Plus_Volunteer
@@ -197,3 +225,49 @@ CREATE TABLE t_donor_snap_integrate
 ,Email      VARCHAR(100)
 )
 go
+
+DROP TABLE IF EXISTS t_Survey_Capabilities
+go
+CREATE TABLE t_Survey_Capabilities
+(
+Capability_Desc VARCHAR(200) NOT NULL
+)
+go
+INSERT INTO t_Survey_Capabilities
+SELECT capability_desc FROM (
+SELECT CAST(NULL AS VARCHAR(200)) AS capability_desc UNION ALL
+SELECT 'Canva'                                            UNION ALL
+SELECT 'Concert stage prep'                               UNION ALL
+SELECT 'Constant Contact or Mail Chimp'                   UNION ALL
+SELECT 'Data Management'                                  UNION ALL
+SELECT 'Data Management Social media content development' UNION ALL
+SELECT 'Donor Snap'                                       UNION ALL
+SELECT 'Financial investing'                              UNION ALL
+SELECT 'Financial management'                             UNION ALL
+SELECT 'Fundraising'                                      UNION ALL
+SELECT 'Graphic design'                                   UNION ALL
+SELECT 'Legal work'                                       UNION ALL
+SELECT 'Logistics and organizing'                         UNION ALL
+SELECT 'Marketing'                                        UNION ALL
+SELECT 'Organizing social activities'                     UNION ALL
+SELECT 'Project or program management'                    UNION ALL
+SELECT 'Proofreading and editing'                         UNION ALL
+SELECT 'Quick Books'                                      UNION ALL
+SELECT 'Social media content development'                 UNION ALL
+SELECT 'Using Google Suite and Workspace'                 UNION ALL
+SELECT 'Website design and maintenance'                   UNION ALL
+SELECT 'Writing' UNION ALL
+SELECT NULL
+) t WHERE capability_desc IS NOT NULL
+go
+
+DROP TABLE IF EXISTS t_Subscribed_Emails
+go
+CREATE TABLE t_Subscribed_Emails
+(
+ Email VARCHAR(100) NOT NULL
+,First_Name VARCHAR(100)
+,Last_Name VARCHAR(100)
+,OPTIN_TIME VARCHAR(100)
+,TAGS VARCHAR(100)
+)

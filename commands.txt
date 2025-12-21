@@ -22,3 +22,8 @@ python Python/sqls_qry.py -R gboyer -D chorus -f "g:\Shared drives\Contact Manag
 
 python Python/sqls_qry.py -J -R gboyer -D chorus -f "g:\Shared drives\Contact Management\github\extract_chorus.sql" -P xlsx -o import_contact_1.xlsx
 
+python Python/sqls_qry.py -R gboyer -D chorus -f "g:\Shared drives\Contact Management\github\qry.sql"
+
+
+python Python/xlsx_qry.py -f "g:\Shared drives\Contact Management\Data\SAMPLE.xlsx" -P db --dbconfigkey gboyer --dbname chorus --tablename t_Volunteer_Responses   -s Volunteer_Responses
+python Python/xlsx_qry.py -f "g:\Shared drives\Contact Management\Data\SAMPLE.xlsx" -P db --dbconfigkey gboyer --dbname chorus --tablename t_Subscribed_Emails   -s Subscribed_Emails
