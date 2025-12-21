@@ -1,0 +1,12 @@
+cd c:\GITHUB\OLIN\fileqry-multisheets
+
+python Python/xlsx_qry.py -f "g:\Shared drives\Contact Management\Data\Data_Files_2025_Dec10\Galen\CC_Member_roster_Augmented_20251209.xlsx"             -P db --dbconfigkey gboyer --dbname chorus --tablename t_Member_Roster              -s Member_Roster
+python Python/xlsx_qry.py -f "g:\Shared drives\Contact Management\Data\Data_Files_2025_Dec10\Galen\Volunteer_SignUp 2025_Responses_NM_Cleaned.xlsx"      -P db --dbconfigkey gboyer --dbname chorus --tablename t_Volunteer_Responses        -s Edited_Responses
+python Python/xlsx_qry.py -f "g:\Shared drives\Contact Management\Data\Data_Files_2025_Dec10\Galen\CC Mailing List-Patron General Updated_2025_Q4.xlsx"  -P db --dbconfigkey gboyer --dbname chorus --tablename t_Mailing_List               -s Records
+python Python/xlsx_qry.py -f "g:\Shared drives\Contact Management\Data\Data_Files_2025_Dec10\Galen\Subscribed_Email_Audience_20251209.xlsx"              -P db --dbconfigkey gboyer --dbname chorus --tablename t_Subscribed_Email_Audience  -s Subscribed_Email_Audience__2025
+
+python Python/sqls_qry.py -R gboyer -D chorus -f "g:\Shared drives\Contact Management\github\qry.sql"
+
+
+Zip_code
+
