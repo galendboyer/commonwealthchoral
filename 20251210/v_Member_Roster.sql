@@ -1,0 +1,76 @@
+DROP VIEW IF EXISTS v_Member_Roster
+go
+CREATE VIEW v_Member_Roster
+AS
+WITH w_roster AS
+(
+SELECT
+        CAST(LoadID AS INT)   AS LoadID
+,       TRIM(Lname)           AS LName
+,       TRIM(Fname)           AS Fname
+,       TRIM(Voice)           AS Voice_Part
+,       TRIM(Email)           AS Email
+,       TRIM(Active)          AS Active
+,       TRIM(CC_Role)         AS CC_Role
+,       TRIM(CC_YoungSinger)  AS CC_YoungSinger
+,       TRIM(HomePH)          AS HomePH
+,       TRIM(MobilePH)        AS MobilePH
+,       TRIM(WorkPH)          AS WorkPH
+,       TRIM(Address2)        AS AddressNormalized
+,       TRIM(Original_Phone)  AS Original_Phone
+FROM t_Member_Roster
+)
+,w_voicepart AS
+(
+SELECT code, description FROM (
+  SELECT CAST(NULL AS VARCHAR(1)) AS code
+  ,      CAST(NULL AS VARCHAR(10)) AS description
+  UNION ALL
+  SELECT 'S', 'Soprano' UNION ALL
+  SELECT 'A', 'Alto'    UNION ALL
+  SELECT 'T', 'Tenor'   UNION ALL
+  SELECT 'B', 'Bass'    UNION ALL
+  SELECT 'N', 'None'    UNION ALL
+  SELECT NULL, NULL
+  ) t WHERE code IS NOT NULL
+)
+,w_address AS
+(
+SELECT
+        LoadID
+,       MAX(CASE WHEN s.ordinal = 1 THEN TRIM(s.value) END) AS Address1
+,       MAX(CASE WHEN s.ordinal = 2 THEN TRIM(s.value) END) AS Address2
+,       MAX(CASE WHEN s.ordinal = 3 THEN TRIM(s.value) END) AS City
+,       MAX(CASE WHEN s.ordinal = 4 THEN TRIM(s.value) END) AS State
+,       MAX(CASE WHEN s.ordinal = 5 THEN TRIM(s.value) END) AS ZIP
+FROM w_roster
+CROSS APPLY STRING_SPLIT(AddressNormalized, ',', 1) AS s
+GROUP BY LoadID
+)
+SELECT
+        w_roster.LoadID
+,       w_roster.LName
+,       w_roster.Fname
+,       w_voicepart.description AS Voice_Part
+,       LOWER(w_roster.Email) AS Email
+,       w_roster.Active
+,       w_roster.CC_Role
+,       w_roster.CC_YoungSinger
+,       w_roster.HomePH
+,       w_roster.MobilePH
+,       w_roster.WorkPH
+,       w_address.Address1
+,       w_address.Address2
+,       w_address.City
+,       w_address.State
+,       w_address.ZIP
+,       w_roster.Original_Phone
+,       vol.capabilities
+FROM w_roster
+INNER JOIN w_voicepart
+ON w_roster.Voice_Part = w_voicepart.code
+INNER JOIN w_address
+ON w_roster.LoadID = w_address.LoadID
+LEFT OUTER JOIN v_Volunteer_Responses vol
+ON w_roster.email = vol.email
+go
