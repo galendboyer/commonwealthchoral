@@ -2,7 +2,8 @@ DROP TABLE IF EXISTS t_Volunteer_Responses
 go
 CREATE TABLE t_Volunteer_Responses
 (
-  Timestmp       VARCHAR(MAX)
+  LoadID VARCHAR(MAX)
+, Timestmp       VARCHAR(MAX)
 , Email          VARCHAR(MAX)
 , Full_Name      VARCHAR(MAX)
 , LName          VARCHAR(MAX)
@@ -33,20 +34,20 @@ DROP TABLE IF EXISTS t_Member_Roster
 go
 CREATE TABLE t_Member_Roster
 (
-  LoadID         VARCHAR(MAX)
-, Lname          VARCHAR(MAX)
-, Fname          VARCHAR(MAX)
-, Voice          VARCHAR(MAX)
-, Email          VARCHAR(MAX)
-, Active         VARCHAR(MAX)
-, CC_Role        VARCHAR(MAX)
-, CC_YoungSinger VARCHAR(MAX)
-, HomePH         VARCHAR(MAX)
-, MobilePH       VARCHAR(MAX)
-, WorkPH         VARCHAR(MAX)
-, AddressOrig    VARCHAR(MAX)
-, AddressNormalized  VARCHAR(MAX)
-, Original_Phone VARCHAR(MAX)
+  LoadID            VARCHAR(MAX)
+, Lname             VARCHAR(MAX)
+, Fname             VARCHAR(MAX)
+, Voice             VARCHAR(MAX)
+, Email             VARCHAR(MAX)
+, Active            VARCHAR(MAX)
+, CC_Role           VARCHAR(MAX)
+, CC_YoungSinger    VARCHAR(MAX)
+, HomePH            VARCHAR(MAX)
+, MobilePH          VARCHAR(MAX)
+, WorkPH            VARCHAR(MAX)
+, Address           VARCHAR(MAX)
+, AddressNormalized VARCHAR(MAX)
+, Original_Phone    VARCHAR(MAX)
 )
 go
 
@@ -74,7 +75,8 @@ DROP TABLE IF EXISTS t_Subscribed_Email_Audience
 go
 CREATE TABLE t_Subscribed_Email_Audience
 (
-  Email          VARCHAR(MAX)
+  LoadID         VARCHAR(MAX)
+, Email          VARCHAR(MAX)
 , FName          VARCHAR(MAX)
 , LName          VARCHAR(MAX)
 , Address_line_1 VARCHAR(MAX)

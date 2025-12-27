@@ -6,7 +6,8 @@ AS
 WITH w_aud AS
 (
 SELECT
-        TRIM(Email) AS Email
+        CAST(LoadID AS INT)   AS LoadID
+,       TRIM(Email) AS Email
 ,       TRIM(FName) AS FName
 ,       TRIM(LName) AS LName
 ,       TRIM(OPTIN_TIME) AS OPTIN_TIME

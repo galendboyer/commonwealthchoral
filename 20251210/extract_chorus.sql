@@ -33,6 +33,7 @@ SELECT
 ,       ros.State AS "State/Province"
 ,       ros.ZIP AS "Zip/Postal Code"
 ,       ros.Capabilities
+,       ros.IsCCActive
 FROM v_Member_Roster  ros
 -- LEFT OUTER JOIN w_pk
 -- ON ros.Email = w_pk.Email
@@ -47,15 +48,16 @@ SELECT
 ,       Last
 ,       First
 ,       "Voice Part"
-,       Cell
-,       WorkPhone
-,       Phone
-,       CAST('Yes' AS VARCHAR(10) AS Active
-,       Address1
-,       Address2
-,       City
-,       "State/Province"
-,       "Zip/Postal Code"
+,       IsCCActive
+-- ,       Cell
+-- ,       WorkPhone
+-- ,       Phone
+-- ,       CAST('Yes' AS VARCHAR(10)) AS Active
+-- ,       Address1
+-- ,       Address2
+-- ,       City
+-- ,       "State/Province"
+-- ,       "Zip/Postal Code"
 ,       Capabilities
 FROM w_select
 WHERE email in (NULL

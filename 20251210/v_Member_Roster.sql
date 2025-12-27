@@ -10,13 +10,13 @@ SELECT
 ,       TRIM(Fname)           AS Fname
 ,       TRIM(Voice)           AS Voice_Part
 ,       TRIM(Email)           AS Email
-,       TRIM(Active)          AS Active
+,       TRIM(Active)          AS IsCCActive
 ,       TRIM(CC_Role)         AS CC_Role
 ,       TRIM(CC_YoungSinger)  AS CC_YoungSinger
 ,       TRIM(HomePH)          AS HomePH
 ,       TRIM(MobilePH)        AS MobilePH
 ,       TRIM(WorkPH)          AS WorkPH
-,       TRIM(Address2)        AS AddressNormalized
+,       TRIM(AddressNormalized)        AS AddressNormalized
 ,       TRIM(Original_Phone)  AS Original_Phone
 FROM t_Member_Roster
 )
@@ -51,9 +51,10 @@ SELECT
         w_roster.LoadID
 ,       w_roster.LName
 ,       w_roster.Fname
+,       LOWER(CONCAT(w_roster.FName,' ', w_roster.LName)) AS Full_Name
 ,       w_voicepart.description AS Voice_Part
 ,       LOWER(w_roster.Email) AS Email
-,       w_roster.Active
+,       w_roster.IsCCActive
 ,       w_roster.CC_Role
 ,       w_roster.CC_YoungSinger
 ,       w_roster.HomePH

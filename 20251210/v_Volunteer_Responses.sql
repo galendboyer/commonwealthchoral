@@ -2,8 +2,11 @@ DROP VIEW IF EXISTS v_Volunteer_Responses
 go
 CREATE VIEW v_Volunteer_Responses
 AS
+WITH w_cte AS
+(
 SELECT
-        TRIM(Timestmp)        AS Timestmp
+        CAST(LoadID AS INT)   AS LoadID
+,       TRIM(Timestmp)        AS Timestmp
 ,       TRIM(Email)           AS Email
 ,       TRIM(Full_Name)       AS Full_Name
 ,       TRIM(LName)           AS LName
@@ -27,4 +30,33 @@ SELECT
 ,       TRIM(CT_Website)      AS CT_Website
 ,       TRIM(CT_SocialMedia)  AS CT_SocialMedia
 FROM t_Volunteer_Responses
+)
+SELECT
+        LoadID
+,       Timestmp
+,       LOWER(Email) AS Email
+,       LOWER(Full_Name) AS Full_Name
+,       LName
+,       FName
+,       Occupation
+,       Retired
+,       Capabilities
+,       CT_Ads
+,       CT_Board
+,       CT_Concerts
+,       CT_Development
+,       CT_Finance
+,       CT_Hospitality
+,       CT_Investment
+,       CT_Marketing
+,       CT_Membership
+,       CT_Outreach
+,       CT_ProgramBook
+,       CT_Rehearsal
+,       CT_Technology
+,       CT_Website
+,       CT_SocialMedia
+FROM w_cte
 go
+
+

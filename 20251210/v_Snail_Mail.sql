@@ -1,6 +1,6 @@
-DROP VIEW IF EXISTS v_Mailing_List
+DROP VIEW IF EXISTS v_Snail_Mail
 go
-CREATE VIEW v_Mailing_List
+CREATE VIEW v_Snail_Mail
 AS
 WITH w_mail AS
 (
