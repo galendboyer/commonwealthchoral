@@ -1,23 +1,25 @@
-DROP VIEW IF EXISTS v_Member_Roster
+DROP VIEW IF EXISTS v_Roster
 go
-CREATE VIEW v_Member_Roster
+CREATE VIEW v_Roster
 AS
 WITH w_roster AS
 (
 SELECT
-        CAST(LoadID AS INT)   AS LoadID
-,       TRIM(Lname)           AS LName
-,       TRIM(Fname)           AS Fname
-,       TRIM(Voice)           AS Voice_Part
-,       TRIM(Email)           AS Email
-,       TRIM(Active)          AS IsCCActive
-,       TRIM(CC_Role)         AS CC_Role
-,       TRIM(CC_YoungSinger)  AS CC_YoungSinger
-,       TRIM(HomePH)          AS HomePH
-,       TRIM(MobilePH)        AS MobilePH
-,       TRIM(WorkPH)          AS WorkPH
-,       TRIM(AddressNormalized)        AS AddressNormalized
-,       TRIM(Original_Phone)  AS Original_Phone
+        CAST(LoadID AS INT)      AS LoadID
+,       TRIM(Lname)              AS LName
+,       TRIM(Fname)              AS Fname
+,       TRIM(Voice)              AS Voice_Part
+,       TRIM(Email)              AS Email
+,       TRIM(Email2)             AS Email2
+,       TRIM(Email_Private)      AS Email_Private
+,       TRIM(Active)             AS IsCCActive
+,       TRIM(CC_Role)            AS CC_Role
+,       TRIM(CC_YoungSinger)     AS CC_YoungSinger
+,       TRIM(HomePH)             AS HomePH
+,       TRIM(MobilePH)           AS MobilePH
+,       TRIM(WorkPH)             AS WorkPH
+,       TRIM(Address2)           AS AddressNormalized
+,       TRIM(Original_Phone)     AS Original_Phone
 FROM t_Member_Roster
 )
 ,w_voicepart AS
@@ -51,9 +53,11 @@ SELECT
         w_roster.LoadID
 ,       w_roster.LName
 ,       w_roster.Fname
-,       LOWER(CONCAT(w_roster.FName,' ', w_roster.LName)) AS Full_Name
+,       dbo.f_full_name(w_roster.FName,w_roster.LName) AS Full_Name
 ,       w_voicepart.description AS Voice_Part
 ,       LOWER(w_roster.Email) AS Email
+,       LOWER(w_roster.Email2) AS Email2
+,       w_roster.Email_Private
 ,       w_roster.IsCCActive
 ,       w_roster.CC_Role
 ,       w_roster.CC_YoungSinger
@@ -66,12 +70,9 @@ SELECT
 ,       w_address.State
 ,       w_address.ZIP
 ,       w_roster.Original_Phone
-,       vol.capabilities
 FROM w_roster
 INNER JOIN w_voicepart
 ON w_roster.Voice_Part = w_voicepart.code
 INNER JOIN w_address
 ON w_roster.LoadID = w_address.LoadID
-LEFT OUTER JOIN v_Volunteer_Responses vol
-ON w_roster.email = vol.email
 go

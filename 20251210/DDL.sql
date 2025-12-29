@@ -39,6 +39,8 @@ CREATE TABLE t_Member_Roster
 , Fname             VARCHAR(MAX)
 , Voice             VARCHAR(MAX)
 , Email             VARCHAR(MAX)
+, Email2            VARCHAR(MAX)
+, Email_Private     VARCHAR(MAX)
 , Active            VARCHAR(MAX)
 , CC_Role           VARCHAR(MAX)
 , CC_YoungSinger    VARCHAR(MAX)
@@ -46,7 +48,7 @@ CREATE TABLE t_Member_Roster
 , MobilePH          VARCHAR(MAX)
 , WorkPH            VARCHAR(MAX)
 , Address           VARCHAR(MAX)
-, AddressNormalized VARCHAR(MAX)
+, Address2          VARCHAR(MAX)
 , Original_Phone    VARCHAR(MAX)
 )
 go

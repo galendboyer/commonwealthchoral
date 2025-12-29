@@ -1,6 +1,8 @@
-cat "g:\Shared drives\Contact Management\github\20251210\DDL.sql"                         > All.sql
-cat "g:\Shared drives\Contact Management\github\20251210\v_Member_Roster.sql"             >> All.sql
-cat "g:\Shared drives\Contact Management\github\20251210\v_Snail_Mail.sql"                >> All.sql
-cat "g:\Shared drives\Contact Management\github\20251210\v_Subscribed_Email_Audience.sql" >> All.sql
-cat "g:\Shared drives\Contact Management\github\20251210\v_Volunteer_Responses.sql"       >> All.sql
-
+cat "g:\Shared drives\Contact Management\github\20251210\comment.sql"            > All.sql
+cat "g:\Shared drives\Contact Management\github\20251210\prologue.sql"          >> All.sql
+cat "g:\Shared drives\Contact Management\github\20251210\DDL.sql"               >> All.sql
+cat "g:\Shared drives\Contact Management\github\20251210\f_full_name.sql"       >> All.sql
+cat "g:\Shared drives\Contact Management\github\20251210\v_Roster.sql"          >> All.sql
+cat "g:\Shared drives\Contact Management\github\20251210\v_Snail_Mail.sql"      >> All.sql
+cat "g:\Shared drives\Contact Management\github\20251210\v_Subscriber.sql"      >> All.sql
+cat "g:\Shared drives\Contact Management\github\20251210\v_Volunteer.sql"       >> All.sql

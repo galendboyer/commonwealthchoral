@@ -32,6 +32,7 @@ SELECT
         Email
 ,       LName
 ,       FName
+,       dbo.f_full_name(w_mail.FName,w_mail.LName) AS Full_Name
 ,       w_street.Address1
 ,       w_street.Address2
 ,       City

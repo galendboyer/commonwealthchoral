@@ -3,10 +3,10 @@ python c:\GITHUB\OLIN\fileqry-multisheets\Python\pycat.py -f "g:\Shared drives\C
 
 cd c:\GITHUB\OLIN\fileqry-multisheets
 
-python Python/xlsx_qry.py -f "g:\Shared drives\Contact Management\Data\Data_Files_2025_Dec10\Galen\AllWorksheets.xlsx" -P db --dbconfigkey gboyer --dbname chorus --tablename t_Member_Roster              -s Member_Roster
-python Python/xlsx_qry.py -f "g:\Shared drives\Contact Management\Data\Data_Files_2025_Dec10\Galen\AllWorksheets.xlsx" -P db --dbconfigkey gboyer --dbname chorus --tablename t_Volunteer_Responses        -s VolunteerResponses
+python Python/xlsx_qry.py -f "g:\Shared drives\Contact Management\Data\Data_Files_2025_Dec10\Galen\AllWorksheets.xlsx" -P db --dbconfigkey gboyer --dbname chorus --tablename t_Member_Roster              -s Roster
+python Python/xlsx_qry.py -f "g:\Shared drives\Contact Management\Data\Data_Files_2025_Dec10\Galen\AllWorksheets.xlsx" -P db --dbconfigkey gboyer --dbname chorus --tablename t_Volunteer_Responses        -s Volunteer
 python Python/xlsx_qry.py -f "g:\Shared drives\Contact Management\Data\Data_Files_2025_Dec10\Galen\AllWorksheets.xlsx" -P db --dbconfigkey gboyer --dbname chorus --tablename t_Mailing_List               -s SnailMail
-python Python/xlsx_qry.py -f "g:\Shared drives\Contact Management\Data\Data_Files_2025_Dec10\Galen\AllWorksheets.xlsx" -P db --dbconfigkey gboyer --dbname chorus --tablename t_Subscribed_Email_Audience  -s SubscribedEmailAudience
+python Python/xlsx_qry.py -f "g:\Shared drives\Contact Management\Data\Data_Files_2025_Dec10\Galen\AllWorksheets.xlsx" -P db --dbconfigkey gboyer --dbname chorus --tablename t_Subscribed_Email_Audience  -s Subscriber
 
 python Python/sqls_qry.py -R gboyer -D chorus -f "g:\Shared drives\Contact Management\github\20251210\extract_chorus.sql"                                -P xlsx -o DonorSnap
 
