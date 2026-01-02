@@ -7,6 +7,7 @@ WITH w_mail AS
 SELECT
         CAST(LoadID AS INT)   AS LoadID
 ,       TRIM(Email)           AS Email
+,       TRIM(Email_Roster)    AS Email_Roster
 ,       TRIM(LNameFName)      AS LNameFName
 ,       TRIM(LName)           AS LName
 ,       TRIM(FName)           AS FName

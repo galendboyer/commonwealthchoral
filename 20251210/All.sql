@@ -27,6 +27,7 @@ CREATE TABLE t_Volunteer_Responses
   LoadID VARCHAR(MAX)
 , Timestmp       VARCHAR(MAX)
 , Email          VARCHAR(MAX)
+, Email_Roster  VARCHAR(MAX)
 , Full_Name      VARCHAR(MAX)
 , LName          VARCHAR(MAX)
 , FName          VARCHAR(MAX)
@@ -82,6 +83,7 @@ CREATE TABLE t_Mailing_List
 (
   LoadID VARCHAR(MAX)
 , Email  VARCHAR(MAX)
+, Email_Roster  VARCHAR(MAX)
 , LNameFname  VARCHAR(MAX)
 , LName  VARCHAR(MAX)
 , FName  VARCHAR(MAX)
@@ -101,6 +103,7 @@ CREATE TABLE t_Subscribed_Email_Audience
 (
   LoadID         VARCHAR(MAX)
 , Email          VARCHAR(MAX)
+, Email_Roster  VARCHAR(MAX)
 , FName          VARCHAR(MAX)
 , LName          VARCHAR(MAX)
 , Address_line_1 VARCHAR(MAX)
@@ -236,6 +239,7 @@ WITH w_mail AS
 SELECT
         CAST(LoadID AS INT)   AS LoadID
 ,       TRIM(Email)           AS Email
+,       TRIM(Email_Roster)    AS Email_Roster
 ,       TRIM(LNameFName)      AS LNameFName
 ,       TRIM(LName)           AS LName
 ,       TRIM(FName)           AS FName
@@ -275,11 +279,12 @@ DROP VIEW IF EXISTS v_Subscriber
 go
 CREATE VIEW v_Subscriber
 AS
-WITH w_aud AS
+WITH w_subs AS
 (
 SELECT
         CAST(LoadID AS INT)   AS LoadID
 ,       TRIM(Email)           AS Email
+,       TRIM(Email_Roster)    AS Email_Roster
 ,       TRIM(FName)           AS FName
 ,       TRIM(LName)           AS LName
 ,       TRIM(OPTIN_TIME)      AS OPTIN_TIME
@@ -291,10 +296,11 @@ SELECT
 ,       LOWER(Email) AS Email
 ,       FName
 ,       LName
-,       dbo.f_full_name(w_aud.FName,w_aud.LName) AS Full_Name
+,       dbo.f_full_name(w_subs.FName,w_subs.LName) AS Full_Name
 ,       OPTIN_TIME
 ,       TAGS1
-FROM w_aud
+,       CASE WHEN TAGS1 IN ('Alum','Alum before 2020','Roster') THEN 1 ELSE 0 END AS is_member
+FROM w_subs
 go
 DROP VIEW IF EXISTS v_Volunteer
 go
@@ -306,6 +312,7 @@ SELECT
         CAST(LoadID AS INT)   AS LoadID
 ,       TRIM(Timestmp)        AS Timestmp
 ,       TRIM(Email)           AS Email
+,       TRIM(Email_Roster)    AS Email_Roster
 ,       TRIM(Full_Name)       AS Full_Name
 ,       TRIM(LName)           AS LName
 ,       TRIM(FName)           AS FName
@@ -331,7 +338,6 @@ FROM t_Volunteer_Responses
 )
 ,w_isdoing AS
 (
-
 SELECT LoadID, STRING_AGG(is_doing, ',') AS is_doing
 FROM (
   SELECT LoadID, is_doing FROM
@@ -360,28 +366,31 @@ FROM (
 )
 ,w_interested AS
 (
-SELECT LoadID, Interested FROM
-  (
-  SELECT CAST(NULL AS INT) AS LoadID
-  ,      CAST(NULL AS VARCHAR(30)) AS Interested
-  UNION ALL
-  SELECT LoadID, CASE WHEN CT_Ads         = 'Interested' THEN 'Ads'         ELSE NULL END FROM w_cte WHERE CT_Ads          IS NOT NULL UNION ALL
-  SELECT LoadID, CASE WHEN CT_Board       = 'Interested' THEN 'Board'       ELSE NULL END FROM w_cte WHERE CT_Board        IS NOT NULL UNION ALL
-  SELECT LoadID, CASE WHEN CT_Concerts    = 'Interested' THEN 'Concerts'    ELSE NULL END FROM w_cte WHERE CT_Concerts     IS NOT NULL UNION ALL
-  SELECT LoadID, CASE WHEN CT_Development = 'Interested' THEN 'Development' ELSE NULL END FROM w_cte WHERE CT_Development  IS NOT NULL UNION ALL
-  SELECT LoadID, CASE WHEN CT_Finance     = 'Interested' THEN 'Finance'     ELSE NULL END FROM w_cte WHERE CT_Finance      IS NOT NULL UNION ALL
-  SELECT LoadID, CASE WHEN CT_Hospitality = 'Interested' THEN 'Hospitality' ELSE NULL END FROM w_cte WHERE CT_Hospitality  IS NOT NULL UNION ALL
-  SELECT LoadID, CASE WHEN CT_Investment  = 'Interested' THEN 'Investment'  ELSE NULL END FROM w_cte WHERE CT_Investment   IS NOT NULL UNION ALL
-  SELECT LoadID, CASE WHEN CT_Marketing   = 'Interested' THEN 'Marketing'   ELSE NULL END FROM w_cte WHERE CT_Marketing    IS NOT NULL UNION ALL
-  SELECT LoadID, CASE WHEN CT_Membership  = 'Interested' THEN 'Membership'  ELSE NULL END FROM w_cte WHERE CT_Membership   IS NOT NULL UNION ALL
-  SELECT LoadID, CASE WHEN CT_Outreach    = 'Interested' THEN 'Outreach'    ELSE NULL END FROM w_cte WHERE CT_Outreach     IS NOT NULL UNION ALL
-  SELECT LoadID, CASE WHEN CT_ProgramBook = 'Interested' THEN 'ProgramBook' ELSE NULL END FROM w_cte WHERE CT_ProgramBook  IS NOT NULL UNION ALL
-  SELECT LoadID, CASE WHEN CT_Rehearsal   = 'Interested' THEN 'Rehearsal'   ELSE NULL END FROM w_cte WHERE CT_Rehearsal    IS NOT NULL UNION ALL
-  SELECT LoadID, CASE WHEN CT_Technology  = 'Interested' THEN 'Technology'  ELSE NULL END FROM w_cte WHERE CT_Technology   IS NOT NULL UNION ALL
-  SELECT LoadID, CASE WHEN CT_Website     = 'Interested' THEN 'Website'     ELSE NULL END FROM w_cte WHERE CT_Website      IS NOT NULL UNION ALL
-  SELECT LoadID, CASE WHEN CT_SocialMedia = 'Interested' THEN 'SocialMedia' ELSE NULL END FROM w_cte WHERE CT_SocialMedia  IS NOT NULL UNION ALL
-  SELECT NULL, NULL
-  ) t WHERE LoadID IS NOT NULL
+SELECT LoadID, STRING_AGG(interested, ',') AS interested
+FROM (
+  SELECT LoadID, Interested FROM
+    (
+    SELECT CAST(NULL AS INT) AS LoadID
+    ,      CAST(NULL AS VARCHAR(30)) AS Interested
+    UNION ALL
+    SELECT LoadID, CASE WHEN CT_Ads         = 'Interested' THEN 'Ads'         ELSE NULL END FROM w_cte WHERE CT_Ads          IS NOT NULL UNION ALL
+    SELECT LoadID, CASE WHEN CT_Board       = 'Interested' THEN 'Board'       ELSE NULL END FROM w_cte WHERE CT_Board        IS NOT NULL UNION ALL
+    SELECT LoadID, CASE WHEN CT_Concerts    = 'Interested' THEN 'Concerts'    ELSE NULL END FROM w_cte WHERE CT_Concerts     IS NOT NULL UNION ALL
+    SELECT LoadID, CASE WHEN CT_Development = 'Interested' THEN 'Development' ELSE NULL END FROM w_cte WHERE CT_Development  IS NOT NULL UNION ALL
+    SELECT LoadID, CASE WHEN CT_Finance     = 'Interested' THEN 'Finance'     ELSE NULL END FROM w_cte WHERE CT_Finance      IS NOT NULL UNION ALL
+    SELECT LoadID, CASE WHEN CT_Hospitality = 'Interested' THEN 'Hospitality' ELSE NULL END FROM w_cte WHERE CT_Hospitality  IS NOT NULL UNION ALL
+    SELECT LoadID, CASE WHEN CT_Investment  = 'Interested' THEN 'Investment'  ELSE NULL END FROM w_cte WHERE CT_Investment   IS NOT NULL UNION ALL
+    SELECT LoadID, CASE WHEN CT_Marketing   = 'Interested' THEN 'Marketing'   ELSE NULL END FROM w_cte WHERE CT_Marketing    IS NOT NULL UNION ALL
+    SELECT LoadID, CASE WHEN CT_Membership  = 'Interested' THEN 'Membership'  ELSE NULL END FROM w_cte WHERE CT_Membership   IS NOT NULL UNION ALL
+    SELECT LoadID, CASE WHEN CT_Outreach    = 'Interested' THEN 'Outreach'    ELSE NULL END FROM w_cte WHERE CT_Outreach     IS NOT NULL UNION ALL
+    SELECT LoadID, CASE WHEN CT_ProgramBook = 'Interested' THEN 'ProgramBook' ELSE NULL END FROM w_cte WHERE CT_ProgramBook  IS NOT NULL UNION ALL
+    SELECT LoadID, CASE WHEN CT_Rehearsal   = 'Interested' THEN 'Rehearsal'   ELSE NULL END FROM w_cte WHERE CT_Rehearsal    IS NOT NULL UNION ALL
+    SELECT LoadID, CASE WHEN CT_Technology  = 'Interested' THEN 'Technology'  ELSE NULL END FROM w_cte WHERE CT_Technology   IS NOT NULL UNION ALL
+    SELECT LoadID, CASE WHEN CT_Website     = 'Interested' THEN 'Website'     ELSE NULL END FROM w_cte WHERE CT_Website      IS NOT NULL UNION ALL
+    SELECT LoadID, CASE WHEN CT_SocialMedia = 'Interested' THEN 'SocialMedia' ELSE NULL END FROM w_cte WHERE CT_SocialMedia  IS NOT NULL UNION ALL
+    SELECT NULL, NULL
+    ) t WHERE LoadID IS NOT NULL) t
+    GROUP BY LoadID
 )
 
 SELECT

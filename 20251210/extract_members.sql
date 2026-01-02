@@ -47,15 +47,30 @@ SELECT LoadID, Email FROM
   SELECT NULL,NULL
   ) t WHERE LoadID IS NOT NULL
 )
+,w_subscriber AS
+(
+  SELECT
+         LoadID
+  ,      email
+  ,      fname
+  ,      lname
+  ,      TAGS1 AS tags
+  FROM v_subscriber
+  WHERE TAGS1 IN (NULL
+  ,'Alum'
+  ,'Alum before 2020'
+  ,'Roster'
+  )
+)
 ,w_select AS
 (
 SELECT
         'Individual' AS ContactType
 ,       w_chosen.ContactIPK        
-,       COALESCE(ros.Email,aud.Email) AS Email
-,       COALESCE(ros.LName,aud.LName) AS Last
-,       COALESCE(ros.FName,aud.FName) AS First
-,       aud.tags1 AS SubscriberTags
+,       COALESCE(w_chosen.Email,ros.Email) AS Email
+,       COALESCE(ros.LName,subs.LName) AS Last
+,       COALESCE(ros.FName,subs.FName) AS First
+,       subs.tags AS SubscriberTags
 ,       ros.Voice_Part AS "Voice Part"
 ,       ros.MobilePH AS Cell
 ,       ros.WorkPH AS WorkPhone
@@ -65,15 +80,15 @@ SELECT
 ,       ros.City
 ,       ros.State AS "State/Province"
 ,       ros.ZIP AS "Zip/Postal Code"
--- -- ,       ros.Capabilities
+-- ,       ros.Capabilities
 -- ,       ros.IsCCActive
-FROM v_Member  ros
-INNER JOIN w_chosen
-ON ros.Email = w_chosen.Email
-FULL OUTER JOIN v_Subscriber aud
-ON ros.email = aud.email
+FROM  w_chosen
+LEFT OUTER JOIN v_Member  ros
+ON w_chosen.Email = ros.Email
 LEFT OUTER JOIN w_board
 ON ros.LoadID = w_board.LoadID
+LEFT OUTER JOIN w_Subscriber subs
+ON ros.email = subs.email
 )
 SELECT
         SubscriberTags
@@ -83,7 +98,7 @@ SELECT
 ,       Last
 ,       First
 ,       "Voice Part"
-,       IsCCActive
+-- ,       IsCCActive
 ,       Cell
 ,       WorkPhone
 ,       Phone
@@ -97,4 +112,6 @@ SELECT
 -- ,       TasksInterested
 -- ,       TasksDoing
 FROM w_select
-ORDER BY SubscriberTags, Last
+ORDER BY
+ email
+-- SubscriberTags, Last

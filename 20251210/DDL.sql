@@ -5,6 +5,7 @@ CREATE TABLE t_Volunteer_Responses
   LoadID VARCHAR(MAX)
 , Timestmp       VARCHAR(MAX)
 , Email          VARCHAR(MAX)
+, Email_Roster  VARCHAR(MAX)
 , Full_Name      VARCHAR(MAX)
 , LName          VARCHAR(MAX)
 , FName          VARCHAR(MAX)
@@ -60,6 +61,7 @@ CREATE TABLE t_Mailing_List
 (
   LoadID VARCHAR(MAX)
 , Email  VARCHAR(MAX)
+, Email_Roster  VARCHAR(MAX)
 , LNameFname  VARCHAR(MAX)
 , LName  VARCHAR(MAX)
 , FName  VARCHAR(MAX)
@@ -79,6 +81,7 @@ CREATE TABLE t_Subscribed_Email_Audience
 (
   LoadID         VARCHAR(MAX)
 , Email          VARCHAR(MAX)
+, Email_Roster  VARCHAR(MAX)
 , FName          VARCHAR(MAX)
 , LName          VARCHAR(MAX)
 , Address_line_1 VARCHAR(MAX)
