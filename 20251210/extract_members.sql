@@ -9,21 +9,21 @@ WITH
     ,      CAST(NULL AS VARCHAR(100)) AS Email
     UNION ALL
   -- Roster
-    SELECT  1,1468,'carolhabrahams@gmail.com'               UNION ALL
-    SELECT 77,NULL,'cctreas@proton.me'                      UNION ALL
-    SELECT 12,NULL,'galendboyer@gmail.com'                  UNION ALL
-    SELECT 57,1466,'nmacgaffey@gmail.com'                   UNION ALL
-    SELECT  4,1467,'megan.baker1@gmail.com'                 UNION ALL
+  SELECT  1,1468,'carolhabrahams@gmail.com'               UNION ALL
+  SELECT 77,NULL,'cctreas@proton.me'                      UNION ALL
+  SELECT 12,NULL,'galendboyer@gmail.com'                  UNION ALL
+  SELECT 57,1466,'nmacgaffey@gmail.com'                   UNION ALL
+  SELECT  4,1467,'megan.baker1@gmail.com'                 UNION ALL
   -- Audience Subscribers
-    SELECT 1035,NULL,'bkeller100@gmail.com'                   UNION ALL
-    SELECT 1183,NULL,'jamesthist@gmail.com'                   UNION ALL
-    SELECT 1020,NULL,'kenneth.mcintosh@childrens.harvard.edu' UNION ALL
-    SELECT 1093,NULL,'leahdriscoll@me.com'                    UNION ALL
-    SELECT 1021,NULL,'ronseverson@gmx.net'                    UNION ALL
-    SELECT 1019,NULL,'selinathehill@gmail.com'                UNION ALL
-    SELECT 1241,NULL,'skaufman@pcgus.com'                     UNION ALL
-    SELECT 1271,NULL,'tdriscoll@esboulos.com'                 UNION ALL
-    SELECT 1125,NULL,'w.hartner@northeastern.edu'             UNION ALL
+  SELECT 1035,NULL,'bkeller100@gmail.com'                   UNION ALL
+  SELECT 1183,NULL,'jamesthist@gmail.com'                   UNION ALL
+  SELECT 1020,NULL,'kenneth.mcintosh@childrens.harvard.edu' UNION ALL
+  SELECT 1093,NULL,'leahdriscoll@me.com'                    UNION ALL
+  SELECT 1021,NULL,'ronseverson@gmx.net'                    UNION ALL
+  SELECT 1019,NULL,'selinathehill@gmail.com'                UNION ALL
+  SELECT 1241,NULL,'skaufman@pcgus.com'                     UNION ALL
+  SELECT 1271,NULL,'tdriscoll@esboulos.com'                 UNION ALL
+  SELECT 1125,NULL,'w.hartner@northeastern.edu'             UNION ALL
     SELECT NULL,NULL,NULL
   ) t WHERE LoadID IS NOT NULL
 )
@@ -46,21 +46,6 @@ SELECT LoadID, Email FROM
   SELECT 36,'nmacgaffey@gmail.com'         UNION ALL
   SELECT NULL,NULL
   ) t WHERE LoadID IS NOT NULL
-)
-,w_subscriber AS
-(
-  SELECT
-         LoadID
-  ,      email
-  ,      fname
-  ,      lname
-  ,      TAGS1 AS tags
-  FROM v_subscriber
-  WHERE TAGS1 IN (NULL
-  ,'Alum'
-  ,'Alum before 2020'
-  ,'Roster'
-  )
 )
 ,w_select AS
 (
@@ -87,7 +72,7 @@ LEFT OUTER JOIN v_Member  ros
 ON w_chosen.Email = ros.Email
 LEFT OUTER JOIN w_board
 ON ros.LoadID = w_board.LoadID
-LEFT OUTER JOIN w_Subscriber subs
+LEFT OUTER JOIN v_Subscriber subs
 ON ros.email = subs.email
 )
 SELECT

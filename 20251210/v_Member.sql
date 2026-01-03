@@ -22,10 +22,17 @@ SELECT
 ,       ros.State
 ,       ros.zip
 ,       ros.Original_Phone
-,       vol.capabilities
+,       vol.Occupation
+,       vol.Retired
+,       vol.Capabilities
+,       vol.TasksDoing
+,       vol.TasksInterested
+,       subs.tags
 FROM v_roster ros
 LEFT OUTER JOIN (SELECT * FROM v_subscriber WHERE is_member = 1) subs
-ON ros.email = sub.email
+ON ros.email = subs.email
 LEFT OUTER JOIN v_volunteer vol
 ON ros.email = vol.email
+LEFT OUTER JOIN (SELECT * FROM v_snail_mail WHERE is_member = 1) mail
+ON ros.email = mail.email
 go

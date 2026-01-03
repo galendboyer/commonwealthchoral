@@ -17,11 +17,12 @@ FROM t_Subscribed_Email_Audience
 SELECT
         LoadID
 ,       LOWER(Email) AS Email
+,       LOWER(Email_Roster) AS Email_Roster
 ,       FName
 ,       LName
 ,       dbo.f_full_name(w_subs.FName,w_subs.LName) AS Full_Name
 ,       OPTIN_TIME
-,       TAGS1
+,       TAGS1 AS tags
 ,       CASE WHEN TAGS1 IN ('Alum','Alum before 2020','Roster') THEN 1 ELSE 0 END AS is_member
 FROM w_subs
 go

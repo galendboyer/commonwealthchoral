@@ -30,10 +30,14 @@ CROSS APPLY STRING_SPLIT(Street1, ',', 1) AS s
 GROUP BY LoadID
 )
 SELECT
-        Email
+        w_mail.LoadID
+,       LOWER(Email) AS Email
+,       LOWER(Email_Roster) AS Email_Roster
+,       CASE WHEN Email_Roster IS NOT NULL THEN 1 ELSE 0 END AS is_member
 ,       LName
 ,       FName
 ,       dbo.f_full_name(w_mail.FName,w_mail.LName) AS Full_Name
+,       CONCAT(w_street.Address1,',',w_street.Address2,',',City,',',State,',',Zip) AS address_concat
 ,       w_street.Address1
 ,       w_street.Address2
 ,       City

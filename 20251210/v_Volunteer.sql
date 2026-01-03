@@ -93,6 +93,7 @@ SELECT
         w_cte.LoadID
 ,       w_cte.Timestmp
 ,       LOWER(w_cte.Email) AS Email
+,       LOWER(w_cte.Email_Roster) AS Email_Roster
 ,       LOWER(w_cte.Full_Name) AS Full_Name
 ,       w_cte.LName
 ,       w_cte.FName

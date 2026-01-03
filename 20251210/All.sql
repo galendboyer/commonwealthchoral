@@ -262,10 +262,14 @@ CROSS APPLY STRING_SPLIT(Street1, ',', 1) AS s
 GROUP BY LoadID
 )
 SELECT
-        Email
+        w_mail.LoadID
+,       LOWER(Email) AS Email
+,       LOWER(Email_Roster) AS Email_Roster
+,       CASE WHEN Email_Roster IS NOT NULL THEN 1 ELSE 0 END AS is_member
 ,       LName
 ,       FName
 ,       dbo.f_full_name(w_mail.FName,w_mail.LName) AS Full_Name
+,       CONCAT(w_street.Address1,',',w_street.Address2,',',City,',',State,',',Zip) AS address_concat
 ,       w_street.Address1
 ,       w_street.Address2
 ,       City
@@ -294,11 +298,12 @@ FROM t_Subscribed_Email_Audience
 SELECT
         LoadID
 ,       LOWER(Email) AS Email
+,       LOWER(Email_Roster) AS Email_Roster
 ,       FName
 ,       LName
 ,       dbo.f_full_name(w_subs.FName,w_subs.LName) AS Full_Name
 ,       OPTIN_TIME
-,       TAGS1
+,       TAGS1 AS tags
 ,       CASE WHEN TAGS1 IN ('Alum','Alum before 2020','Roster') THEN 1 ELSE 0 END AS is_member
 FROM w_subs
 go
@@ -397,6 +402,7 @@ SELECT
         w_cte.LoadID
 ,       w_cte.Timestmp
 ,       LOWER(w_cte.Email) AS Email
+,       LOWER(w_cte.Email_Roster) AS Email_Roster
 ,       LOWER(w_cte.Full_Name) AS Full_Name
 ,       w_cte.LName
 ,       w_cte.FName
@@ -426,4 +432,42 @@ LEFT OUTER JOIN w_isdoing
 ON w_cte.LoadID = w_isdoing.LoadID
 LEFT OUTER JOIN w_interested
 ON w_cte.LoadID = w_interested.LoadID
+go
+DROP VIEW IF EXISTS v_Member
+go
+CREATE VIEW v_Member
+AS
+SELECT
+        ros.LoadID
+,       ros.LName
+,       ros.Fname
+,       ros.Voice_Part
+,       ros.Email
+,       ros.Email2
+,       ros.Email_Private
+,       ros.IsCCActive
+,       ros.CC_Role
+,       ros.CC_YoungSinger
+,       ros.HomePH
+,       ros.MobilePH
+,       ros.WorkPH
+,       ros.Address1
+,       ros.Address2
+,       ros.City
+,       ros.State
+,       ros.zip
+,       ros.Original_Phone
+,       vol.Occupation
+,       vol.Retired
+,       vol.Capabilities
+,       vol.TasksDoing
+,       vol.TasksInterested
+,       subs.tags
+FROM v_roster ros
+LEFT OUTER JOIN (SELECT * FROM v_subscriber WHERE is_member = 1) subs
+ON ros.email = subs.email
+LEFT OUTER JOIN v_volunteer vol
+ON ros.email = vol.email
+LEFT OUTER JOIN (SELECT * FROM v_snail_mail WHERE is_member = 1) mail
+ON ros.email = mail.email
 go
