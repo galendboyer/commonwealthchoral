@@ -93,6 +93,7 @@ CREATE TABLE t_Mailing_List
 , State  VARCHAR(MAX)
 , Zip  VARCHAR(MAX)
 , SOURCE_KEY VARCHAR(MAX)
+, Email_Source VARCHAR(MAX)
 )
 go
 
@@ -103,7 +104,7 @@ CREATE TABLE t_Subscribed_Email_Audience
 (
   LoadID         VARCHAR(MAX)
 , Email          VARCHAR(MAX)
-, Email_Roster  VARCHAR(MAX)
+, Email_Roster   VARCHAR(MAX)
 , FName          VARCHAR(MAX)
 , LName          VARCHAR(MAX)
 , Address_line_1 VARCHAR(MAX)
@@ -129,6 +130,7 @@ CREATE TABLE t_Subscribed_Email_Audience
 , NOTES          VARCHAR(MAX)
 , TAGS           VARCHAR(MAX)
 , TAGS1          VARCHAR(MAX)
+, IS_A_DUPLICATE VARCHAR(MAX)
 )
 go
 DROP FUNCTION IF EXISTS f_full_name
@@ -172,7 +174,7 @@ SELECT
 ,       TRIM(HomePH)             AS HomePH
 ,       TRIM(MobilePH)           AS MobilePH
 ,       TRIM(WorkPH)             AS WorkPH
-,       TRIM(Address2)           AS AddressNormalized
+,       TRIM(Address2)           AS Address_Normalized
 ,       TRIM(Original_Phone)     AS Original_Phone
 FROM t_Member_Roster
 )
@@ -200,7 +202,7 @@ SELECT
 ,       MAX(CASE WHEN s.ordinal = 4 THEN TRIM(s.value) END) AS State
 ,       MAX(CASE WHEN s.ordinal = 5 THEN TRIM(s.value) END) AS ZIP
 FROM w_roster
-CROSS APPLY STRING_SPLIT(AddressNormalized, ',', 1) AS s
+CROSS APPLY STRING_SPLIT(Address_Normalized, ',', 1) AS s
 GROUP BY LoadID
 )
 SELECT
@@ -218,6 +220,7 @@ SELECT
 ,       w_roster.HomePH
 ,       w_roster.MobilePH
 ,       w_roster.WorkPH
+,       w_roster.Address_Normalized
 ,       w_address.Address1
 ,       w_address.Address2
 ,       w_address.City
@@ -265,11 +268,14 @@ SELECT
         w_mail.LoadID
 ,       LOWER(Email) AS Email
 ,       LOWER(Email_Roster) AS Email_Roster
-,       CASE WHEN Email_Roster IS NOT NULL THEN 1 ELSE 0 END AS is_member
+,       source_key
+,       CASE WHEN Email_Roster IS NOT NULL THEN 1 ELSE 0 END AS is_member_by_email
+,       CASE WHEN source_key IN (3,4) THEN 1 ELSE 0 END AS is_member_by_source
+,       CASE WHEN source_key IN (3,4) OR Email_Roster IS NOT NULL THEN 1 ELSE 0 END AS is_member
 ,       LName
 ,       FName
 ,       dbo.f_full_name(w_mail.FName,w_mail.LName) AS Full_Name
-,       CONCAT(w_street.Address1,',',w_street.Address2,',',City,',',State,',',Zip) AS address_concat
+,       CONCAT(w_street.Address1,', ',w_street.Address2,', ',City,', ',State,', ',Zip) AS address_concat
 ,       w_street.Address1
 ,       w_street.Address2
 ,       City
@@ -293,6 +299,7 @@ SELECT
 ,       TRIM(LName)           AS LName
 ,       TRIM(OPTIN_TIME)      AS OPTIN_TIME
 ,       TRIM(TAGS1)           AS TAGS1
+,       TRIM(IS_A_DUPLICATE)  AS IS_A_DUPLICATE
 FROM t_Subscribed_Email_Audience
 )
 SELECT
@@ -305,6 +312,7 @@ SELECT
 ,       OPTIN_TIME
 ,       TAGS1 AS tags
 ,       CASE WHEN TAGS1 IN ('Alum','Alum before 2020','Roster') THEN 1 ELSE 0 END AS is_member
+,       IS_A_DUPLICATE
 FROM w_subs
 go
 DROP VIEW IF EXISTS v_Volunteer
@@ -433,41 +441,117 @@ ON w_cte.LoadID = w_isdoing.LoadID
 LEFT OUTER JOIN w_interested
 ON w_cte.LoadID = w_interested.LoadID
 go
-DROP VIEW IF EXISTS v_Member
+DROP VIEW IF EXISTS v_Roster_Enriched
 go
-CREATE VIEW v_Member
+CREATE VIEW v_Roster_Enriched
 AS
-SELECT
-        ros.LoadID
-,       ros.LName
-,       ros.Fname
-,       ros.Voice_Part
-,       ros.Email
-,       ros.Email2
-,       ros.Email_Private
-,       ros.IsCCActive
-,       ros.CC_Role
-,       ros.CC_YoungSinger
-,       ros.HomePH
-,       ros.MobilePH
-,       ros.WorkPH
-,       ros.Address1
-,       ros.Address2
-,       ros.City
-,       ros.State
-,       ros.zip
-,       ros.Original_Phone
-,       vol.Occupation
-,       vol.Retired
-,       vol.Capabilities
-,       vol.TasksDoing
-,       vol.TasksInterested
-,       subs.tags
-FROM v_roster ros
-LEFT OUTER JOIN (SELECT * FROM v_subscriber WHERE is_member = 1) subs
-ON ros.email = subs.email
-LEFT OUTER JOIN v_volunteer vol
-ON ros.email = vol.email
-LEFT OUTER JOIN (SELECT * FROM v_snail_mail WHERE is_member = 1) mail
-ON ros.email = mail.email
+WITH
+ w_ros AS
+(
+  SELECT
+          ros.LoadID
+  ,       ros.LName AS LName
+  ,       ros.Fname AS FName
+  ,       ros.Voice_Part
+  ,       ros.Email AS Email
+  ,       ros.Email2
+  ,       ros.Email_Private
+  ,       ros.IsCCActive
+  ,       ros.CC_Role
+  ,       ros.CC_YoungSinger
+  ,       ros.HomePH
+  ,       ros.MobilePH
+  ,       ros.WorkPH
+  ,       ros.Address1
+  ,       ros.Address2
+  ,       ros.City
+  ,       ros.State
+  ,       ros.zip
+  ,       ros.Original_Phone
+  ,       vol.Occupation
+  ,       vol.Retired
+  ,       vol.Capabilities
+  ,       vol.TasksDoing
+  ,       vol.TasksInterested
+  FROM v_roster ros
+  LEFT OUTER JOIN v_volunteer vol
+  ON ros.email = vol.Email_Roster
+)
+,w_subs AS
+(
+  SELECT * FROM v_subscriber
+  WHERE Email_Roster IS NOT NULL
+  AND IS_A_DUPLICATE = 'No'
+)
+SELECT 
+        w_ros.LoadID
+,       COALESCE(w_ros.LName,w_subs.LName) AS LName
+,       COALESCE(w_ros.Fname,w_subs.FName) AS FName
+,       w_ros.Voice_Part
+,       COALESCE(w_ros.Email,w_subs.Email_Roster) AS Email
+,       w_ros.Email2
+,       w_ros.Email_Private
+,       w_ros.IsCCActive
+,       w_ros.CC_Role
+,       w_ros.CC_YoungSinger
+,       w_ros.HomePH
+,       w_ros.MobilePH
+,       w_ros.WorkPH
+,       w_ros.Address1
+,       w_ros.Address2
+,       w_ros.City
+,       w_ros.State
+,       w_ros.zip
+,       w_ros.Original_Phone
+,       w_ros.Occupation
+,       w_ros.Retired
+,       w_ros.Capabilities
+,       w_ros.TasksDoing
+,       w_ros.TasksInterested
+,       w_subs.tags
+FROM w_ros
+FULL OUTER JOIN w_subs
+ON w_ros.Email = w_subs.Email_Roster
+go
+DROP VIEW IF EXISTS v_tst_chosen
+go
+CREATE VIEW v_tst_chosen
+AS
+  SELECT whychosen, is_member, LoadID, ContactIPK, Email FROM
+    (
+    SELECT
+           CAST(NULL AS VARCHAR(20)) AS whychosen
+    ,      CAST(NULL AS INT) AS is_member
+    ,      CAST(NULL AS INT) AS LoadID
+    ,      CAST(NULL AS INT) AS ContactIPK
+    ,      CAST(NULL AS VARCHAR(100)) AS Email
+    UNION ALL
+  -- Roster
+  SELECT 'ROSTER',1, 1,1468,'carolhabrahams@gmail.com'               UNION ALL
+  SELECT 'ROSTER',1,77,NULL,'cctreas@proton.me'                      UNION ALL
+  SELECT 'ROSTER',1,12,NULL,'galendboyer@gmail.com'                  UNION ALL
+  SELECT 'ROSTER',1,57,1466,'nmacgaffey@gmail.com'                   UNION ALL
+  SELECT 'ROSTER',1, 4,1467,'megan.baker1@gmail.com'                 UNION ALL
+  -- Audience Subscribers
+  SELECT 'SUBSCRIBERS',1,1035,NULL,'bkeller100@gmail.com'                   UNION ALL
+  SELECT 'SUBSCRIBERS',0,1183,NULL,'jamesthist@gmail.com'                   UNION ALL
+  SELECT 'SUBSCRIBERS',1,1020,NULL,'kenneth.mcintosh@childrens.harvard.edu' UNION ALL
+  SELECT 'SUBSCRIBERS',0,1093,NULL,'leahdriscoll@me.com'                    UNION ALL
+  -- SELECT 'SUBSCRIBERS',1,1021,NULL,'ronseverson@gmx.net'                    UNION ALL
+  SELECT 'SUBSCRIBERS',0,1019,NULL,'selinathehill@gmail.com'                UNION ALL
+  SELECT 'SUBSCRIBERS',1,1241,NULL,'skaufman@pcgus.com'                     UNION ALL
+  SELECT 'SUBSCRIBERS',0,1271,NULL,'tdriscoll@esboulos.com'                 UNION ALL
+  SELECT 'SUBSCRIBERS',1,1125,NULL,'w.hartner@northeastern.edu'             UNION ALL
+  -- Board
+  SELECT 'BOARD',1,52,NULL,'abigailrosesweeney@gmail.com' UNION ALL
+  -- SELECT 48,NULL,'cctreas@proton.me'            UNION ALL
+  SELECT 'BOARD',1,27,NULL,'cej321@gmail.com'             UNION ALL
+  SELECT 'BOARD',1,20,NULL,'fwgratz@gmail.com'            UNION ALL
+  SELECT 'BOARD',1,25,NULL,'judyje15@gmail.com'           UNION ALL
+  SELECT 'BOARD',1,13,NULL,'kosydney@gmail.com'           UNION ALL
+  SELECT 'BOARD',1, 7,NULL,'michele.berman@prodigy.net'   UNION ALL
+  SELECT 'BOARD',1,40,NULL,'michele.michaud@comcast.net'  UNION ALL
+  -- SELECT 36,NULL,'nmacgaffey@gmail.com'         UNION ALL
+    SELECT NULL,NULL,NULL,NULL,NULL
+  ) t WHERE LoadID IS NOT NULL
 go

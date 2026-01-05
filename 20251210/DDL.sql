@@ -71,6 +71,7 @@ CREATE TABLE t_Mailing_List
 , State  VARCHAR(MAX)
 , Zip  VARCHAR(MAX)
 , SOURCE_KEY VARCHAR(MAX)
+, Email_Source VARCHAR(MAX)
 )
 go
 
@@ -81,7 +82,7 @@ CREATE TABLE t_Subscribed_Email_Audience
 (
   LoadID         VARCHAR(MAX)
 , Email          VARCHAR(MAX)
-, Email_Roster  VARCHAR(MAX)
+, Email_Roster   VARCHAR(MAX)
 , FName          VARCHAR(MAX)
 , LName          VARCHAR(MAX)
 , Address_line_1 VARCHAR(MAX)
@@ -107,5 +108,6 @@ CREATE TABLE t_Subscribed_Email_Audience
 , NOTES          VARCHAR(MAX)
 , TAGS           VARCHAR(MAX)
 , TAGS1          VARCHAR(MAX)
+, IS_A_DUPLICATE VARCHAR(MAX)
 )
 go

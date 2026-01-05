@@ -33,11 +33,14 @@ SELECT
         w_mail.LoadID
 ,       LOWER(Email) AS Email
 ,       LOWER(Email_Roster) AS Email_Roster
-,       CASE WHEN Email_Roster IS NOT NULL THEN 1 ELSE 0 END AS is_member
+,       source_key
+,       CASE WHEN Email_Roster IS NOT NULL THEN 1 ELSE 0 END AS is_member_by_email
+,       CASE WHEN source_key IN (3,4) THEN 1 ELSE 0 END AS is_member_by_source
+,       CASE WHEN source_key IN (3,4) OR Email_Roster IS NOT NULL THEN 1 ELSE 0 END AS is_member
 ,       LName
 ,       FName
 ,       dbo.f_full_name(w_mail.FName,w_mail.LName) AS Full_Name
-,       CONCAT(w_street.Address1,',',w_street.Address2,',',City,',',State,',',Zip) AS address_concat
+,       CONCAT(w_street.Address1,', ',w_street.Address2,', ',City,', ',State,', ',Zip) AS address_concat
 ,       w_street.Address1
 ,       w_street.Address2
 ,       City

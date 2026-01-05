@@ -18,7 +18,7 @@ SELECT
 ,       TRIM(HomePH)             AS HomePH
 ,       TRIM(MobilePH)           AS MobilePH
 ,       TRIM(WorkPH)             AS WorkPH
-,       TRIM(Address2)           AS AddressNormalized
+,       TRIM(Address2)           AS Address_Normalized
 ,       TRIM(Original_Phone)     AS Original_Phone
 FROM t_Member_Roster
 )
@@ -46,7 +46,7 @@ SELECT
 ,       MAX(CASE WHEN s.ordinal = 4 THEN TRIM(s.value) END) AS State
 ,       MAX(CASE WHEN s.ordinal = 5 THEN TRIM(s.value) END) AS ZIP
 FROM w_roster
-CROSS APPLY STRING_SPLIT(AddressNormalized, ',', 1) AS s
+CROSS APPLY STRING_SPLIT(Address_Normalized, ',', 1) AS s
 GROUP BY LoadID
 )
 SELECT
@@ -64,6 +64,7 @@ SELECT
 ,       w_roster.HomePH
 ,       w_roster.MobilePH
 ,       w_roster.WorkPH
+,       w_roster.Address_Normalized
 ,       w_address.Address1
 ,       w_address.Address2
 ,       w_address.City

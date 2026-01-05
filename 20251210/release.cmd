@@ -6,5 +6,6 @@ cat "g:\Shared drives\Contact Management\github\20251210\v_Roster.sql"          
 cat "g:\Shared drives\Contact Management\github\20251210\v_Snail_Mail.sql"      >> All.sql
 cat "g:\Shared drives\Contact Management\github\20251210\v_Subscriber.sql"      >> All.sql
 cat "g:\Shared drives\Contact Management\github\20251210\v_Volunteer.sql"       >> All.sql
-cat "g:\Shared drives\Contact Management\github\20251210\v_Member.sql"          >> All.sql
+cat "g:\Shared drives\Contact Management\github\20251210\v_Roster_Enriched.sql" >> All.sql
+cat "g:\Shared drives\Contact Management\github\20251210\v_tst_chosen.sql"      >> All.sql
 

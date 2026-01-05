@@ -12,6 +12,7 @@ SELECT
 ,       TRIM(LName)           AS LName
 ,       TRIM(OPTIN_TIME)      AS OPTIN_TIME
 ,       TRIM(TAGS1)           AS TAGS1
+,       TRIM(IS_A_DUPLICATE)  AS IS_A_DUPLICATE
 FROM t_Subscribed_Email_Audience
 )
 SELECT
@@ -24,5 +25,6 @@ SELECT
 ,       OPTIN_TIME
 ,       TAGS1 AS tags
 ,       CASE WHEN TAGS1 IN ('Alum','Alum before 2020','Roster') THEN 1 ELSE 0 END AS is_member
+,       IS_A_DUPLICATE
 FROM w_subs
 go
