@@ -1,7 +1,20 @@
+-- WITH w_chosen AS
+-- (
+-- SELECT
+--        ch.is_member
+-- ,      ch.LoadID
+-- ,      ch.ContactIPK
+-- ,      ch.Email
+-- ,      em.Email_tst
+-- FROM v_tst_chosen ch
+-- INNER JOIN v_tst_email em
+-- ON ch.Email = em.Email
+-- )
 SELECT
         'Individual' AS ContactType
-,       chosen.ContactIPK        
+-- ,       w_chosen.ContactIPK        
 ,       ros.Email AS Email
+-- ,       w_chosen.Email_tst AS Email
 ,       ros.LName AS Last
 ,       ros.FName AS First
 ,       ros.tags AS SubscriberTags
@@ -19,9 +32,16 @@ SELECT
 ,       ros.TasksInterested
 ,       ros.TasksDoing
 ,       CAST('Yes' AS VARCHAR(10)) AS Active
-FROM  v_tst_chosen chosen
-LEFT OUTER JOIN v_Roster_Enriched  ros
-ON chosen.Email = ros.Email
-ORDER BY
- email
+-- FROM  w_chosen
+-- LEFT OUTER JOIN
+FROM v_Roster_Enriched  ros
+-- ON w_chosen.Email = ros.Email
+-- WHERE 1=1
+-- AND w_chosen.email IN
+-- (NULL
+-- ,'abigailrosesweeney@gmail.com'
+-- ,'cej321@gmail.com'
+-- ,'fwgratz@gmail.com'
+-- )
+ORDER BY email
 -- SubscriberTags, Last

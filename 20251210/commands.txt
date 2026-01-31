@@ -1,6 +1,3 @@
-python c:\GITHUB\OLIN\fileqry-multisheets\Python\pycat.py -f "g:\Shared drives\Contact Management\github\20251210\release.txt" -o "g:\Shared drives\Contact Management\github\20251210\CC.sql"
-
-
 cd c:\GITHUB\OLIN\fileqry-multisheets
 
 python Python/xlsx_qry.py -f "g:\Shared drives\Contact Management\Data\Data_Files_2025_Dec10\Galen\AllWorksheets.xlsx" -P db --dbconfigkey gboyer --dbname chorus --tablename t_Member_Roster              -s Roster
@@ -8,6 +5,6 @@ python Python/xlsx_qry.py -f "g:\Shared drives\Contact Management\Data\Data_File
 python Python/xlsx_qry.py -f "g:\Shared drives\Contact Management\Data\Data_Files_2025_Dec10\Galen\AllWorksheets.xlsx" -P db --dbconfigkey gboyer --dbname chorus --tablename t_Mailing_List               -s SnailMail
 python Python/xlsx_qry.py -f "g:\Shared drives\Contact Management\Data\Data_Files_2025_Dec10\Galen\AllWorksheets.xlsx" -P db --dbconfigkey gboyer --dbname chorus --tablename t_Subscribed_Email_Audience  -s Subscriber
 
-python Python/sqls_qry.py -R gboyer -D chorus -f "g:\Shared drives\Contact Management\github\20251210\extract_members.sql" -P xlsx -o DonorSnap
+python Python/sqls_qry.py -R gboyer -D chorus -f "g:\Shared drives\Contact Management\github\20251210\extract_roster.sql" -P xlsx -o DonorSnap
 
 python Python/sqls_qry.py -R gboyer -D chorus -f "g:\Shared drives\Contact Management\github\20251210\chorus_members_in_mailing_list.sql"                -P xlsx -o chorus_members_in_mailing_list

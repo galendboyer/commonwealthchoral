@@ -65,7 +65,7 @@ SELECT
 ,       w_ros.Capabilities
 ,       w_ros.TasksDoing
 ,       w_ros.TasksInterested
-,       w_subs.tags
+,       CASE WHEN w_subs.Email IS NULL THEN 'Roster' ELSE w_subs.tags END AS tags
 FROM w_ros
 FULL OUTER JOIN w_subs
 ON w_ros.Email = w_subs.Email_Roster
