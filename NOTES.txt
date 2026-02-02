@@ -1,0 +1,19 @@
+member@commonwealthchorale.net
+bass@commonwealthchorale.net
+alto@commonwealthchorale.net
+soprano@commonwealthchorale.net
+tenor@commonwealthchorale.net
+board@commonwealthchorale.net
+superboard@commonwealthchorale.net
+
+marketing@commonwealthchorale.com
+@commonwealthchorale.com
+
+Contact
+  Member
+    Alum
+    Roster
+       Not-Singing (Yes/No)
+  Supporter
+    Subscriber -> Is actively recieving communication because we have their Email and/or Postal
+    Family/Friends (Yes/No)
