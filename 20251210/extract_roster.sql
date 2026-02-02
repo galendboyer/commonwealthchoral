@@ -1,15 +1,15 @@
--- WITH w_chosen AS
--- (
--- SELECT
---        ch.is_member
--- ,      ch.LoadID
--- ,      ch.ContactIPK
--- ,      ch.Email
--- ,      em.Email_tst
--- FROM v_tst_chosen ch
--- INNER JOIN v_tst_email em
--- ON ch.Email = em.Email
--- )
+WITH w_chosen AS
+(
+SELECT
+       ch.is_member
+,      ch.LoadID
+,      ch.ContactIPK
+,      ch.Email
+,      em.Email_tst
+FROM v_tst_chosen ch
+INNER JOIN v_tst_email em
+ON ch.Email = em.Email
+)
 SELECT
         'Individual' AS ContactType
 -- ,       w_chosen.ContactIPK        
@@ -32,11 +32,10 @@ SELECT
 ,       ros.TasksInterested
 ,       ros.TasksDoing
 ,       CAST('Yes' AS VARCHAR(10)) AS Active
--- FROM  w_chosen
--- LEFT OUTER JOIN
-FROM v_Roster_Enriched  ros
--- ON w_chosen.Email = ros.Email
--- WHERE 1=1
+FROM  w_chosen
+LEFT OUTER JOIN v_Roster_Enriched  ros
+ON w_chosen.Email = ros.Email
+WHERE 1=1
 -- AND w_chosen.email IN
 -- (NULL
 -- ,'abigailrosesweeney@gmail.com'
