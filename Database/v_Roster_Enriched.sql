@@ -41,7 +41,8 @@ WITH
   AND IS_A_DUPLICATE = 'No'
 )
 SELECT 
-        w_ros.LoadID
+        w_ros.LoadID AS LoadID_ros
+,       w_subs.LoadID AS LoadID_subs
 ,       COALESCE(w_ros.LName,w_subs.LName) AS LName
 ,       COALESCE(w_ros.Fname,w_subs.FName) AS FName
 ,       w_ros.Voice_Part

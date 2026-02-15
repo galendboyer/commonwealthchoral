@@ -5,7 +5,8 @@ AS
 WITH w_subs AS
 (
 SELECT
-        CAST(LoadID AS INT)   AS LoadID
+        CAST(LEFT(LoadID, CHARINDEX('.', LoadID + '.') - 1) AS INT) AS LoadID
+        -- CAST(LoadID AS INT)   AS LoadID
 ,       TRIM(Email)           AS Email
 ,       TRIM(Email_Roster)    AS Email_Roster
 ,       TRIM(FName)           AS FName
