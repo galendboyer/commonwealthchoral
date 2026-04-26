@@ -12,13 +12,19 @@ ON ch.Email = em.Email
 )
 SELECT
         'Individual' AS ContactType
--- ,       w_chosen.ContactIPK        
+,       w_chosen.ContactIPK        
+,       ros.CC_YoungSinger AS IsRosterYoungSinger
+,       ros.CC_Role AS RosterRole
+,       ros.IsCCActive AS IsRosterActive
+,       CAST('Roster' AS VARCHAR(10))  AS CCContactType
+,       ros.Occupation AS RSOccupation
+,       CASE WHEN ros.Retired IS NULL THEN 'NA' ELSE ros.Retired END  AS 	RSIsRetired
 ,       ros.Email AS Email
 -- ,       w_chosen.Email_tst AS Email
 ,       ros.LName AS Last
 ,       ros.FName AS First
 ,       ros.tags AS SubscriberTags
-,       ros.Voice_Part AS "Voice Part"
+,       ros.Voice_Part AS RosterVoicePart
 ,       ros.MobilePH AS Cell
 ,       ros.WorkPH AS WorkPhone
 ,       ros.HomePH AS Phone
@@ -27,11 +33,9 @@ SELECT
 ,       ros.City
 ,       ros.State AS "State/Province"
 ,       ros.ZIP AS "Zip/Postal Code"
-,       ros.Capabilities
-,       ros.IsCCActive
-,       ros.TasksInterested
-,       ros.TasksDoing
-,       CAST('Yes' AS VARCHAR(10)) AS Active
+,       ros.Capabilities AS RosterCapabilities
+,       ros.TasksInterested AS RosterTasksInterested
+,       ros.TasksDoing AS RosterTasksDoing
 FROM  w_chosen
 LEFT OUTER JOIN v_Roster_Enriched  ros
 ON w_chosen.Email = ros.Email
