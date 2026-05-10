@@ -34,24 +34,32 @@ WITH
   LEFT OUTER JOIN v_volunteer vol
   ON ros.email = vol.Email_Roster
 )
-,w_subs AS
-(
-  SELECT * FROM v_subscriber
-  WHERE Email_Roster IS NOT NULL
-  AND IS_A_DUPLICATE = 'No'
-)
+-- ,w_subs AS
+-- (
+--   SELECT LoadID
+--   ,      LName
+--   ,      FName
+--   ,      Email_Roster
+--   ,      Email
+--   ,      CASE WHEN LOWER(tags) LIKE 'alum%' Then 'Alum'
+--               WHEN LOWER(tags) = 'subscriber' THEN 'Roster'
+--               ELSE tags
+--          END AS tags
+--   FROM v_subscriber
+--   WHERE Email_Roster IS NOT NULL
+--   AND IS_A_DUPLICATE = 'No'
+-- )
 SELECT 
         w_ros.LoadID AS LoadID_ros
-,       w_subs.LoadID AS LoadID_subs
-,       COALESCE(w_ros.LName,w_subs.LName) AS LName
-,       COALESCE(w_ros.Fname,w_subs.FName) AS FName
+,       w_ros.LName
+,       FName
 ,       w_ros.Voice_Part
-,       COALESCE(w_ros.Email,w_subs.Email_Roster) AS Email
+,       Email
 ,       w_ros.Email2
-,       w_ros.Email_Private
-,       w_ros.IsCCActive
+,       w_ros.Email_Private AS isEmailPrivate
+,       w_ros.IsCCActive AS isCCActive
 ,       w_ros.CC_Role
-,       w_ros.CC_YoungSinger
+,       w_ros.CC_YoungSinger AS isYoungSinger
 ,       w_ros.HomePH
 ,       w_ros.MobilePH
 ,       w_ros.WorkPH
@@ -62,12 +70,11 @@ SELECT
 ,       w_ros.zip
 ,       w_ros.Original_Phone
 ,       w_ros.Occupation
-,       w_ros.Retired
+,       w_ros.Retired AS isRetired
 ,       w_ros.Capabilities
 ,       w_ros.TasksDoing
 ,       w_ros.TasksInterested
-,       CASE WHEN w_subs.Email IS NULL THEN 'Roster' ELSE w_subs.tags END AS tags
 FROM w_ros
-FULL OUTER JOIN w_subs
-ON w_ros.Email = w_subs.Email_Roster
+-- LEFT OUTER JOIN w_subs
+-- ON w_ros.Email = w_subs.Email_Roster
 go

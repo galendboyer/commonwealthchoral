@@ -33,10 +33,11 @@ SELECT
         w_mail.LoadID
 ,       LOWER(Email) AS Email
 ,       LOWER(Email_Roster) AS Email_Roster
-,       source_key
+,       src.source_key
+,       src.source_description
 ,       CASE WHEN Email_Roster IS NOT NULL THEN 1 ELSE 0 END AS is_member_by_email
-,       CASE WHEN source_key IN (3,4) THEN 1 ELSE 0 END AS is_member_by_source
-,       CASE WHEN source_key IN (3,4) OR Email_Roster IS NOT NULL THEN 1 ELSE 0 END AS is_member
+,       CASE WHEN src.source_key IN (3,4) THEN 1 ELSE 0 END AS is_member_by_source
+,       CASE WHEN src.source_key IN (3,4) OR Email_Roster IS NOT NULL THEN 1 ELSE 0 END AS is_member
 ,       LName
 ,       FName
 ,       dbo.f_full_name(w_mail.FName,w_mail.LName) AS Full_Name
@@ -49,4 +50,6 @@ SELECT
 FROM w_mail
 INNER JOIN w_street
 ON w_mail.LoadID = w_street.LoadID
+INNER JOIN v_Source_Key src
+ON w_mail.source_key = src.source_key
 go

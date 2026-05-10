@@ -1,51 +1,40 @@
-WITH w_chosen AS
-(
-SELECT
-       ch.is_member
-,      ch.LoadID
-,      ch.ContactIPK
-,      ch.Email
-,      em.Email_tst
-FROM v_tst_chosen ch
-INNER JOIN v_tst_email em
-ON ch.Email = em.Email
+WITH w_chosen AS (
+  SELECT email FROM (
+    SELECT CAST(NULL AS VARCHAR(50)) AS email
+    UNION ALL
+    SELECT 'carolhabrahams@gmail.com'               UNION ALL
+    SELECT 'cctreas@proton.me'                      UNION ALL
+    SELECT 'galendboyer@gmail.com'                  UNION ALL
+    SELECT 'nmacgaffey@gmail.com'                   UNION ALL
+    SELECT 'megan.baker1@gmail.com'                 UNION ALL
+    SELECT NULL
+  ) t WHERE email IS NOT NULL
 )
 SELECT
-        'Individual' AS ContactType
--- ,       w_chosen.ContactIPK        
-,       ros.CC_YoungSinger AS IsRosterYoungSinger
-,       ros.CC_Role AS RosterRole
-,       ros.IsCCActive AS IsRosterActive
-,       CAST('Roster' AS VARCHAR(10))  AS CCContactType
-,       ros.Occupation AS RSOccupation
-,       CASE WHEN ros.Retired IS NULL THEN 'NA' ELSE ros.Retired END  AS 	RSIsRetired
-,       w_chosen.Email AS Email
--- ,       ros.Email
--- ,       w_chosen.Email_tst AS Email
-,       ros.LName AS Last
-,       ros.FName AS First
-,       ros.tags AS SubscriberTags
-,       ros.Voice_Part AS RosterVoicePart
-,       ros.MobilePH AS Cell
-,       ros.WorkPH AS WorkPhone
-,       ros.HomePH AS Phone
-,       ros.Address1
-,       ros.Address2
-,       ros.City
-,       ros.State AS "State/Province"
-,       ros.ZIP AS "Zip/Postal Code"
-,       ros.Capabilities AS RosterCapabilities
-,       ros.TasksInterested AS RosterTasksInterested
-,       ros.TasksDoing AS RosterTasksDoing
-FROM  w_chosen
-LEFT OUTER JOIN v_Roster_Enriched  ros
-ON w_chosen.Email = ros.Email
-WHERE 1=1
--- AND w_chosen.email IN
--- (NULL
--- ,'abigailrosesweeney@gmail.com'
--- ,'cej321@gmail.com'
--- ,'fwgratz@gmail.com'
--- )
-ORDER BY email
--- SubscriberTags, Last
+       'Individual' AS ContactType
+,      'Member'     AS CCContactType       
+,      'Roster'     AS CCContactSubType
+,       v.isYoungSinger AS IsRosterYoungSinger
+,       v.CC_Role AS RosterRole
+,       v.isCCActive AS isRosterActive
+,       v.Occupation
+,       CASE WHEN v.isRetired IS NULL THEN 'NA' ELSE v.isRetired END  AS 	isRetired
+,       v.Email AS Email
+,       v.LName AS Last
+,       v.FName AS First
+,       v.Voice_Part AS RosterVoicePart
+,       v.MobilePH AS Cell
+,       v.WorkPH AS WorkPhone
+,       v.HomePH AS Phone
+,       v.Address1
+,       v.Address2
+,       v.City
+,       v.State AS "State/Province"
+,       v.ZIP AS "Zip/Postal Code"
+,       v.Capabilities AS RosterCapabilities
+,       v.TasksInterested AS RosterTasksInterested
+,       v.TasksDoing AS RosterTasksDoing
+FROM  v_Roster_Enriched v
+INNER JOIN  w_chosen
+ON v.email = w_chosen.email
+ORDER BY v.email

@@ -12,19 +12,16 @@ ON ch.Email = em.Email
 )
 SELECT
         'Individual' AS ContactType
--- ,       w_chosen.ContactIPK        
-,       ros.CC_YoungSinger AS IsRosterYoungSinger
-,       ros.CC_Role AS RosterRole
-,       ros.IsCCActive AS IsRosterActive
-,       CAST('Roster' AS VARCHAR(10))  AS CCContactType
-,       ros.Occupation AS RSOccupation
-,       CASE WHEN ros.Retired IS NULL THEN 'NA' ELSE ros.Retired END  AS 	RSIsRetired
-,       w_chosen.Email AS Email
--- ,       ros.Email
--- ,       w_chosen.Email_tst AS Email
+,       B_isYoungSinger AS B_IsYoungSinger
+,       CC_Role AS RosterRole
+,       B_isCCActive AS B_isRosterActive
+,       CAST('Roster' AS VARCHAR(10))  AS ChoralContactType
+,       Occupation
+,       CASE WHEN B_isRetired IS NULL THEN 'NA' ELSE B_isRetired END  AS 	B_isRetired
+,       COALESCE(w_chosen.Email,ros.Email) AS Email
 ,       ros.LName AS Last
 ,       ros.FName AS First
-,       ros.tags AS SubscriberTags
+,       ros.tags AS MemberType
 ,       ros.Voice_Part AS RosterVoicePart
 ,       ros.MobilePH AS Cell
 ,       ros.WorkPH AS WorkPhone
@@ -32,11 +29,11 @@ SELECT
 ,       ros.Address1
 ,       ros.Address2
 ,       ros.City
-,       ros.State AS "State/Province"
-,       ros.ZIP AS "Zip/Postal Code"
-,       ros.Capabilities AS RosterCapabilities
-,       ros.TasksInterested AS RosterTasksInterested
-,       ros.TasksDoing AS RosterTasksDoing
+,       State AS "State/Province"
+,       ZIP AS "Zip/Postal Code"
+,       Capabilities AS RosterCapabilities
+,       TasksInterested AS RosterTasksInterested
+,       TasksDoing AS RosterTasksDoing
 FROM  w_chosen
 LEFT OUTER JOIN v_Roster_Enriched  ros
 ON w_chosen.Email = ros.Email
