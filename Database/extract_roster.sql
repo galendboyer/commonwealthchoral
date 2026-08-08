@@ -12,14 +12,15 @@ ON ch.Email = em.Email
 )
 SELECT
         'Individual' AS ContactType
-,       w_chosen.ContactIPK        
+-- ,       w_chosen.ContactIPK        
 ,       ros.CC_YoungSinger AS IsRosterYoungSinger
 ,       ros.CC_Role AS RosterRole
 ,       ros.IsCCActive AS IsRosterActive
 ,       CAST('Roster' AS VARCHAR(10))  AS CCContactType
 ,       ros.Occupation AS RSOccupation
 ,       CASE WHEN ros.Retired IS NULL THEN 'NA' ELSE ros.Retired END  AS 	RSIsRetired
-,       ros.Email AS Email
+,       w_chosen.Email AS Email
+-- ,       ros.Email
 -- ,       w_chosen.Email_tst AS Email
 ,       ros.LName AS Last
 ,       ros.FName AS First
