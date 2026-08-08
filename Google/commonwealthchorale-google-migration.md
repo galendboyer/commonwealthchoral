@@ -1,70 +1,91 @@
-# Migrating commonwealthchorale.net to Google
+# Cutting Over `commonwealthchorale.net` to Google Groups — Live Domain Plan
 
-## Background
+*Unlike the `driscollsingers.net` test (a domain with nothing on it), `commonwealthchorale.net` is live: existing mail flows through it today via GoDaddy and Constant Contact. This plan is built around **not breaking that** during the transition.*
 
-commonwealthchorale.net is registered at GoDaddy, but its DNS is currently hosted at **Cloudflare** (nameservers `nile.ns.cloudflare.com` / `tia.ns.cloudflare.com`). GoDaddy has no visibility into what records exist in that Cloudflare zone — it only knows DNS is delegated there.
+## The key fact that shapes everything
 
-To move the domain to Google, this is a **two-step migration**, not a one-step DNS edit:
-
-1. **Cut the domain over from Cloudflare's nameservers to GoDaddy's**, which makes GoDaddy the DNS authority.
-2. **Rebuild the needed records in GoDaddy's DNS Records tab**, pointing at Google instead of whatever Cloudflare had.
-
-Nameservers are the single lever that controls *all* DNS for the domain — email routing (MX), the website (A/CNAME), and verification records (TXT) all live in one zone, wherever the nameservers point. There's no per-service "route email through X" setting separate from that.
-
-**Risk:** the moment nameservers switch, anything Cloudflare was serving (email, live website, other subdomains) stops resolving until the equivalent records exist in GoDaddy. Confirm with Carol what's actually running on Cloudflare before touching production (commonwealthchorale.net).
+**MX records apply to the entire domain, not individual addresses.** You cannot route `basses@commonwealthchorale.net` through Google while leaving `altos@` or anyone's personal mailbox on the old system — the moment MX changes, *all* incoming mail for `commonwealthchorale.net` goes to Google. This is unavoidable and is the one genuinely "live" step in this whole process. Everything else below can be done in advance with **zero impact** on current mail.
 
 ---
 
-## Part 1: Full dry run on driscollsingers.net
+## Phase 0: Audit the Current State (do this first, changes nothing)
 
-Since driscollsingers.net is already on GoDaddy's own nameservers, testing "point it at Google" alone (as done previously) only exercises step 2 above — not the Cloudflare cutover. To rehearse the *actual* migration end-to-end:
+Before touching anything, find out exactly what's running today:
 
-1. **Create a free Cloudflare account** and add driscollsingers.net as a site.
-2. **Point driscollsingers.net's nameservers at Cloudflare** (GoDaddy → domain → DNS → Nameservers → Change Nameservers → enter custom nameservers → the two Cloudflare ones Cloudflare gives you). Wait for propagation.
-3. **Add a couple of test records inside Cloudflare** (e.g., an A record and an MX record) so there's something real to migrate away from — this simulates Carol's current setup.
-4. **Switch nameservers back to GoDaddy's defaults**: GoDaddy → DNS → Nameservers → Change Nameservers → select "Use GoDaddy nameservers." Wait for propagation.
-5. **Rebuild records in GoDaddy pointed at Google** (see Part 2 record list below) under DNS → DNS Records → Add.
-6. Confirm everything resolves as expected (site loads, verification passes) before treating this as validated.
+1. **Check current MX records.** In GoDaddy DNS management for `commonwealthchorale.net`, look at the MX records currently listed. Write down every host and priority value exactly as shown — this is your rollback data if anything goes wrong.
+2. **Check current TXT records**, specifically:
+   - Any **SPF record** (starts with `v=spf1 ...`) — this authorizes which servers are allowed to send mail *as* `commonwealthchorale.net`. If Constant Contact sends newsletters "from" your domain, there's likely an `include:` for Constant Contact's servers in here.
+   - Any **DKIM records** already present (for GoDaddy email or Constant Contact)
+   - Any **DMARC record** (a TXT record at `_dmarc.commonwealthchorale.net`) — this tells receiving mail servers how strictly to enforce SPF/DKIM failures
+3. **Inventory real mailboxes.** Does anyone have an actual personal inbox like `director@commonwealthchorale.net` hosted through GoDaddy email? (Not a list/group address — an actual individual's mailbox.) This matters enormously: if real mailboxes exist, they must become Google Workspace users (or the mail routed elsewhere) before MX changes, or their mail will start bouncing the moment you cut over.
+4. **Understand how the current group addresses actually work.** Ask: when someone emails `basses@commonwealthchorale.net` today, what actually happens? Likely one of:
+   - It's a GoDaddy email forwarding rule/alias that redirects to a list of addresses
+   - It doesn't actually receive mail at all — Constant Contact might just be a one-way *outbound* newsletter tool where an admin uploads a list and Constant Contact blasts it out, with no real inbound `basses@` mailbox existing
+   
+   This distinction changes your migration significantly. If there's no real inbound address today, you're not "migrating" mail flow so much as creating something new. If there is, you need to know exactly what's currently forwarding to whom, since Constant Contact's list may not match GoDaddy's forwarding list exactly.
 
-This confirms you know the exact click path and timing before doing it on the live choir domain.
-
----
-
-## Part 2: Records to point at Google
-
-Add these under **DNS → DNS Records → Add** (after nameservers are on GoDaddy):
-
-### Website (Google Sites)
-- In Google Sites: Settings → Custom URLs → enter the domain → Assign. Google will give you a verification token and hosting target.
-- **TXT** record: Host `@`, Value = verification token from Google.
-- **CNAME** record: Host `www`, Value `ghs.googlehosted.com`.
-- Root domain (`@`) can't be a CNAME — if you need the naked domain to also work, use the **A records** Google Sites provides instead of a CNAME for `@`.
-- Back in Google Sites, click **Verify**.
-
-### Email (only if moving email to Google Workspace — confirm with Carol first)
-- **MX** records: Google Workspace's mail server list (provided when you set up Workspace for the domain, typically `ASPMX.L.GOOGLE.COM` plus several `ALT` servers with priorities).
-- **TXT** (SPF): `v=spf1 include:_spf.google.com ~all`
-- **TXT/CNAME** (DKIM): value provided by Google Workspace admin console when you generate a DKIM key for the domain.
+**Bring back what you find for #1 and #2 (the actual MX and TXT record text) — paste them here and I'll help you read them and figure out exactly what needs to change vs. stay.**
 
 ---
 
-## Part 3: Migrate commonwealthchorale.net (live domain)
+## Phase 1: Set Up Google Workspace for the Domain (non-disruptive)
 
-Only after the dry run succeeds and Carol confirms what's actually on Cloudflare:
+This step **does not touch mail flow** — you're just registering the domain with Workspace and proving ownership.
 
-1. Document every record currently in Cloudflare's dashboard for commonwealthchorale.net (needs Cloudflare login — ask Carol who has access, since GoDaddy delegate access doesn't extend to it).
-2. GoDaddy → commonwealthchorale.net → DNS → Nameservers → Change Nameservers → "Use GoDaddy nameservers." Wait for propagation (up to 48 hrs, usually faster).
-3. Immediately rebuild in GoDaddy DNS Records:
-   - Everything from step 1 that still needs to exist (anything not moving to Google).
-   - The new Google records from Part 2.
-4. Verify: site loads over `commonwealthchorale.net` and `www.commonwealthchorale.net`, email sends/receives correctly, Google Sites shows "Verified."
+- Sign up at workspace.google.com for `commonwealthchorale.net`
+- Apply for/confirm **Google Workspace for Nonprofits** eligibility first
+- Complete domain **ownership verification** (a TXT record, added *alongside* existing TXT records — this does not remove or conflict with SPF/DKIM/etc. already there)
+
+At this point, current mail keeps flowing exactly as before. Nothing has changed for end users.
+
+## Phase 2: Set Up DKIM (non-disruptive)
+
+- Generate the DKIM key in Admin console (Apps → Gmail → Authenticate email)
+- Add the DKIM TXT record (`google._domainkey`) in GoDaddy — this is an *additional* TXT record, not a replacement of anything existing
+- Click "Start authentication"
+
+Still no impact on live mail — DKIM just means Google *can* authenticate messages once it's actually sending them, which isn't yet.
+
+## Phase 3: Build and Fully Populate Every Google Group (non-disruptive)
+
+This is the big one you can do entirely in advance:
+
+- Create every group you need (`basses@`, `altos@`, `tenors@`, etc.) inside the Workspace account
+- Configure each group's settings (external members allowed, who can post, reply-to-group, etc. — same settings we worked through on the test domain)
+- **Add every real member now**, using their personal emails
+- Test internally — group owners can post test messages and members will receive them **as long as you're testing via the group's direct interface or a member replying**, though true "send an email to `basses@commonwealthchorale.net` from outside" won't work correctly until MX is switched (mail will still go to your old provider until then)
+
+By the end of this phase, the groups are fully built and populated, sitting ready — just not yet receiving domain mail.
+
+## Phase 4: Update SPF/DMARC for Outgoing Mail (careful, but not yet disruptive to inbound)
+
+If you want Google Groups/Gmail to be able to send mail *as* `commonwealthchorale.net` (e.g., a reply from a Workspace-hosted address), your SPF record needs `include:_spf.google.com` added alongside whatever's already there for Constant Contact — **not replacing it**, unless you're also retiring Constant Contact's sending. Removing an existing legitimate include could cause Constant Contact's newsletters to start failing SPF checks and land in spam.
+
+This step is safe to do ahead of the cutover since it only affects *outgoing* authentication, not where incoming mail is delivered.
+
+## Phase 5: The MX Cutover (the actual live moment)
+
+This is the one step that immediately redirects all incoming mail:
+
+- Confirm every real mailbox from Phase 0's inventory has a home in Workspace (as a user or otherwise handled) — **do not proceed if this isn't resolved**
+- Change the MX record(s) in GoDaddy to point to Google (`smtp.google.com`, priority 1, or the legacy 5-record set)
+- Do this at a **low-traffic time** (e.g., late evening) and tell people mail might be briefly delayed
+- Propagation is usually fast (minutes) but can take up to 24–48 hours in rare cases since DNS caching varies by the sender's own resolver
+
+## Phase 6: Verify and Monitor
+
+- Send test emails to each group address from an outside account
+- Confirm delivery to members
+- Check that Constant Contact sending (if still in use) isn't broken by SPF changes
+- Watch for a few days for any bounced mail reports
+
+## Phase 7: Decommission the Old Path
+
+- Once confident, turn off/retire the old GoDaddy forwarding rules for the group addresses
+- Decide whether Constant Contact remains in use for actual newsletter *sending* (a separate function from the group list-serve behavior) or whether it's being fully replaced
 
 ---
 
-## Quick reference: GoDaddy navigation
+## What to bring back next
 
-- Domain detail page: `dcc.godaddy.com/control/portfolio/<domain>/settings`
-- Tabs: **Overview | DNS | Products | Activity Log**
-- Under DNS: **DNS Records | Forwarding | Nameservers | Premium DNS | Hostnames | DS Records**
-  - **DNS Records** — add/edit A, CNAME, MX, TXT records (only usable once nameservers point to GoDaddy).
-  - **Nameservers** — the single setting controlling who's authoritative for the domain's DNS.
+Paste (or describe) the actual current **MX records** and **TXT records** for `commonwealthchorale.net` from GoDaddy's DNS management page, and I'll help you read exactly what's there and map out what changes, what stays, and what the real risk points are before you touch anything live.
