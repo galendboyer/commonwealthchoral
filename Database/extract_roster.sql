@@ -12,17 +12,17 @@ WITH w_chosen AS (
 )
 SELECT
        'Individual' AS ContactType
-,      'Member'     AS CCContactType       
-,      'Roster'     AS CCContactSubType
-,       v.isYoungSinger AS IsRosterYoungSinger
-,       v.CC_Role AS RosterRole
-,       v.isCCActive AS isRosterActive
-,       v.Occupation
-,       CASE WHEN v.isRetired IS NULL THEN 'NA' ELSE v.isRetired END  AS 	isRetired
+,      'Member'     AS CCContactCategory
+,      'Roster'     AS CCContactType
+,       v.isYoungSinger AS CCIsRosterYoungSinger
+,       v.CC_Role AS CCRosterRole
+,       v.isCCActive AS CCisRosterActive
+,       v.Occupation AS CCOccupation
+,       CASE WHEN v.isRetired IS NULL THEN 'NA' ELSE v.isRetired END  AS 	CCisRetired
 ,       v.Email AS Email
 ,       v.LName AS Last
 ,       v.FName AS First
-,       v.Voice_Part AS RosterVoicePart
+,       v.Voice_Part AS CCRosterVoicePart
 ,       v.MobilePH AS Cell
 ,       v.WorkPH AS WorkPhone
 ,       v.HomePH AS Phone
@@ -31,10 +31,10 @@ SELECT
 ,       v.City
 ,       v.State AS "State/Province"
 ,       v.ZIP AS "Zip/Postal Code"
-,       v.Capabilities AS RosterCapabilities
-,       v.TasksInterested AS RosterTasksInterested
-,       v.TasksDoing AS RosterTasksDoing
+,       v.Capabilities AS CCRosterCapabilities
+,       v.TasksInterested AS CCRosterTasksInterested
+,       v.TasksDoing AS CCRosterTasksDoing
 FROM  v_Roster_Enriched v
-INNER JOIN  w_chosen
-ON v.email = w_chosen.email
+-- INNER JOIN  w_chosen
+-- ON v.email = w_chosen.email
 ORDER BY v.email

@@ -10,13 +10,13 @@ WITH w_chosen AS (
 )
 SELECT
         'Individual'          AS ContactType
-,       'Supporter'           AS CCContactType       
-,       'Family and Friends'  AS CCContactSubType
+,       'Supporter'           AS CCContactCategory
+,       'Family and Friends'  AS CCContactType
 ,       v.Email
 ,       v.FName AS First
 ,       v.LName AS Last
 -- ,       v.Full_Name
 FROM v_Subscriber v
-INNER JOIN w_chosen
-ON v.email = w_chosen.email
+-- INNER JOIN w_chosen
+-- ON v.email = w_chosen.email
 WHERE v.tag_desc = 'Family and Friends'
