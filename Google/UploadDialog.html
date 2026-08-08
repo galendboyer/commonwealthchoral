@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <style>
+    body { font-family: Arial, sans-serif; font-size: 13px; padding: 4px 8px; }
+    p { color: #333; }
+    input[type="file"] { margin: 10px 0; }
+    button {
+      background: #1a73e8; color: #fff; border: none; border-radius: 4px;
+      padding: 8px 16px; cursor: pointer; font-size: 13px;
+    }
+    button:disabled { background: #9aa0a6; cursor: default; }
+    #status { margin-top: 14px; white-space: pre-wrap; line-height: 1.4; }
+    #status.error { color: #c5221f; }
+    #status.ok { color: #188038; }
+  </style>
+</head>
+<body>
+  <p>Choose the roster file exported from Donor Snap (.xlsx or .csv).<br>
+     It will be imported into the <b>Roster</b> tab using the column names
+     set in the <b>Config</b> tab.</p>
+
+  <input type="file" id="fileInput" accept=".xlsx,.xls,.csv">
+  <br>
+  <button id="uploadBtn" onclick="doUpload()">Import Roster</button>
+
+  <div id="status"></div>
+
+  <script>
+    function doUpload() {
+      var fileInput = document.getElementById('fileInput');
+      var status = document.getElementById('status');
+      var btn = document.getElementById('uploadBtn');
+
+      status.className = '';
+      status.textContent = '';
+
+      if (!fileInput.files.length) {
+        status.className = 'error';
+        status.textContent = 'Choose a file first.';
+        return;
+      }
+
+      var file = fileInput.files[0];
+      btn.disabled = true;
+      status.textContent = 'Reading "' + file.name + '"...';
+
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        var base64 = e.target.result.split(',')[1];
+        status.textContent = 'Uploading and importing...';
+
+        google.script.run
+          .withSuccessHandler(function (message) {
+            status.className = 'ok';
+            status.textContent = message;
+            btn.disabled = false;
+          })
+          .withFailureHandler(function (err) {
+            status.className = 'error';
+            status.textContent = 'Error: ' + err.message;
+            btn.disabled = false;
+          })
+          .importRosterFile(base64, file.name);
+      };
+      reader.onerror = function () {
+        status.className = 'error';
+        status.textContent = 'Could not read that file.';
+        btn.disabled = false;
+      };
+      reader.readAsDataURL(file);
+    }
+  </script>
+</body>
+</html>
