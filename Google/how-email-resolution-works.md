@@ -15,3 +15,23 @@ From here, the path splits in two (steps 3 onward in the diagram), depending on 
 Two details make this trickier to observe than it sounds. First, only one of these two paths is ever active for the domain as a whole — it's determined by that single Nameservers setting, not by the individual email address, so no domain can have some addresses going through Google and others going through Cloudflare at the same time. Second, DNS answers get cached for a period of time (the record's TTL) by every mail server and resolver that asks about them, so a sending mail server can still be holding onto a stale answer even right after the Nameservers setting changes — which is why a test can appear to succeed or fail for reasons that have nothing to do with whether the setting change actually "worked."
 
 The only way to know which path a given message actually took is to look at where it ended up and read the delivery trail left in its headers — that trail records every mail server that actually touched the message, which is the ground truth regardless of what any dashboard currently displays.
+
+---
+
+## The same picture, applied to commonwealthchorale.net
+
+![Numbered diagram of commonwealthchorale.net's current Cloudflare path and its Google target](./commonwealthchorale-routing-diagram.svg)
+
+commonwealthchorale.net sits in the opposite position from the driscollsingers.net test. Today, its Nameservers setting (2) points at Cloudflare, so the Cloudflare column (3b/4b/5b) is the only one that resolves anything — a message sent to this domain right now goes through Cloudflare's DNS zone and lands wherever Cloudflare's Email Routing (or whatever mechanism Carol has in place) currently forwards it. The Google column (3a/4a/5a) is drawn as a dashed target: those DNS records don't exist yet, and nothing reaches Google today. Migrating this domain means building that Google column for real — adding the MX, SPF, DKIM, and CNAME/TXT records — and then flipping the Nameservers setting so GoDaddy's own DNS zone becomes authoritative instead of Cloudflare's.
+
+Nothing about this domain should be touched until the toggle mechanism itself has been proven on the test domain below.
+
+---
+
+## The same picture, as a toggle test on driscollsingers.net
+
+![Numbered diagram of driscollsingers.net with both paths pre-configured and a toggle at the registrar](./driscollsingers-toggle-test-diagram.svg)
+
+driscollsingers.net is set up differently on purpose: both columns already exist and are fully configured — the Google column (3a/4a/5a) through its existing Google Workspace setup, and the Cloudflare column (3b/4b/5b) through the Email Routing rule built earlier in this process. Neither column is "the test" and the other "the real thing" — both are equally real and equally ready to answer. The only thing that decides which one actually handles a given message is the Nameservers value at step 2, the same single toggle switch described throughout this document.
+
+The point of this test is to flip that toggle back and forth — Google to Cloudflare, then Cloudflare back to Google, more than once — and confirm each time, using the header-trail method described above, that the message actually took the path the toggle said it should. Proving that the switch is reliable and repeatable in both directions is what builds confidence that flipping it. Once that's demonstrated on driscollsingers.net, the same action — changing the Nameservers setting, and only that setting — gets carried out on commonwealthchorale.net, using its own actual records rather than test ones, to complete the migration shown in the diagram above.
