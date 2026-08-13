@@ -1,6 +1,6 @@
 <svg viewBox="0 0 760 700" xmlns="http://www.w3.org/2000/svg" role="img">
-<title>Numbered diagram: driscollsingers.net toggle test, both paths pre-configured</title>
-<desc>Step 1: a sender's mail server has a message for driscollsingers.net. Step 2: it queries GoDaddy, the registrar, which holds the Nameservers setting — both possible answers are already preconfigured and ready. The left column, 3a/4a/5a, leads to a Google Workspace mailbox via GoDaddy's own nameservers and DNS records. The right column, 3b/4b/5b, leads to either Groupanizer or Groups.io via Cloudflare's nameservers and DNS zone. The Nameservers setting is flipped back and forth repeatedly to confirm the toggle is reliable before doing the same toggle on commonwealthchorale.net.</desc>
+<title>Numbered diagram: driscollsingers.net toggle test plan — Google side already working, Cloudflare side still to be built</title>
+<desc>Step 1: a sender's mail server has a message for driscollsingers.net. Step 2: it queries GoDaddy, the registrar, which holds the Nameservers setting. The left column, 3a/4a/5a, is already configured and tested — it leads to a Google Workspace mailbox via GoDaddy's own nameservers and DNS records. The right column, 3b/4b/5b, is not yet configured or tested — it would lead to either Groupanizer or Groups.io via Cloudflare's nameservers and DNS zone, and still needs to be built and verified on its own before any toggling happens. Only after the right column works independently does the Nameservers setting get flipped back and forth repeatedly, to confirm the toggle itself is reliable before doing the same toggle on commonwealthchorale.net.</desc>
 
 <style>
   text { font-family: Arial, Helvetica, sans-serif; }
@@ -35,7 +35,7 @@
 <path d="M 330 84 A 50 20 0 0 1 430 84" stroke="#666666" stroke-width="2" fill="none"/>
 <polygon points="330,84 340,78 340,90" fill="#666666"/>
 <polygon points="430,84 420,78 420,90" fill="#666666"/>
-<text x="380" y="78" font-size="11" fill="#666666" text-anchor="middle">flip back and forth, repeatedly</text>
+<text x="380" y="78" font-size="11" fill="#666666" text-anchor="middle">flip back and forth, once both sides work</text>
 
 <!-- fork -->
 <line x1="380" y1="156" x2="380" y2="176" stroke="#999999" stroke-width="2"/>
@@ -45,77 +45,77 @@
 <polygon points="190,204 184,194 196,194" fill="#4285F4"/>
 <polygon points="570,204 564,194 576,194" fill="#F38020"/>
 
-<!-- status tags: both preconfigured -->
-<rect x="140" y="182" width="100" height="18" rx="9" fill="#eef3fc" stroke="#4285F4"/>
-<text x="190" y="195" class="tag" fill="#4285F4">PRECONFIGURED</text>
-<rect x="520" y="182" width="100" height="18" rx="9" fill="#fff2e8" stroke="#F38020"/>
-<text x="570" y="195" class="tag" fill="#F38020">PRECONFIGURED</text>
+<!-- status tags: left is done, right is not -->
+<rect x="115" y="182" width="150" height="18" rx="9" fill="#eef3fc" stroke="#4285F4"/>
+<text x="190" y="195" class="tag" fill="#4285F4">CONFIGURED &amp; TESTED</text>
+<rect x="490" y="182" width="160" height="18" rx="9" fill="#fff2e8" stroke="#F38020" stroke-dasharray="4,3"/>
+<text x="570" y="195" class="tag" fill="#F38020">NOT YET CONFIGURED</text>
 
-<!-- Step 3a (left, Google) -->
+<!-- Step 3a (left, Google — done) -->
 <rect x="80" y="206" width="220" height="56" rx="10" class="box" stroke="#4285F4"/>
 <circle cx="94" cy="218" r="13" fill="#4285F4"/>
 <text x="94" y="223" class="badge">3a</text>
 <text x="190" y="231" class="title">Nameservers → Google</text>
-<text x="190" y="249" class="sub">one possible setting</text>
+<text x="190" y="249" class="sub">already working today</text>
 
-<!-- Step 3b (right, Groupanizer/Groups.io) -->
-<rect x="460" y="206" width="220" height="56" rx="10" class="box" stroke="#F38020"/>
+<!-- Step 3b (right, Cloudflare — to build) -->
+<rect x="460" y="206" width="220" height="56" rx="10" class="box" stroke="#F38020" stroke-dasharray="6,4"/>
 <circle cx="474" cy="218" r="13" fill="#F38020"/>
 <text x="474" y="223" class="badge">3b</text>
 <text x="570" y="231" class="title">Nameservers → Cloudflare</text>
-<text x="570" y="249" class="sub">the other possible setting</text>
+<text x="570" y="249" class="sub">not the active setting yet</text>
 
 <line x1="190" y1="262" x2="190" y2="286" class="path-g" stroke-width="2"/>
 <polygon points="190,294 184,284 196,284" fill="#4285F4"/>
 <line x1="570" y1="262" x2="570" y2="286" class="path-c" stroke-width="2"/>
 <polygon points="570,294 564,284 576,284" fill="#F38020"/>
 
-<!-- Step 4a (left, Google) -->
+<!-- Step 4a (left, Google — done) -->
 <rect x="70" y="296" width="240" height="66" rx="10" class="box" stroke="#4285F4"/>
 <circle cx="84" cy="308" r="13" fill="#4285F4"/>
 <text x="84" y="313" class="badge">4a</text>
 <text x="190" y="322" class="title">DNS records → Google</text>
 <text x="190" y="340" class="sub">via GoDaddy's DNS Records tab</text>
-<text x="190" y="355" class="muted">(already sitting there, ready)</text>
+<text x="190" y="355" class="muted">(already built and tested)</text>
 
-<!-- Step 4b (right, Groupanizer/Groups.io) -->
-<rect x="450" y="296" width="240" height="66" rx="10" class="box" stroke="#F38020"/>
+<!-- Step 4b (right, Cloudflare — to build) -->
+<rect x="450" y="296" width="240" height="66" rx="10" class="box" stroke="#F38020" stroke-dasharray="6,4"/>
 <circle cx="464" cy="308" r="13" fill="#F38020"/>
 <text x="464" y="313" class="badge">4b</text>
 <text x="570" y="322" class="title">DNS records → Cloudflare</text>
 <text x="570" y="340" class="sub">via Cloudflare's DNS zone</text>
-<text x="570" y="355" class="muted">(already sitting there, ready)</text>
+<text x="570" y="355" class="muted">(needs to be built and tested)</text>
 
 <line x1="190" y1="362" x2="190" y2="386" class="path-g" stroke-width="2"/>
 <polygon points="190,394 184,384 196,384" fill="#4285F4"/>
 <line x1="570" y1="362" x2="570" y2="386" class="path-c" stroke-width="2"/>
 <polygon points="570,394 564,384 576,384" fill="#F38020"/>
 
-<!-- Step 5a (left, Google) -->
+<!-- Step 5a (left, Google — done) -->
 <rect x="70" y="396" width="240" height="70" rx="10" class="box" stroke="#4285F4" stroke-width="2"/>
 <circle cx="84" cy="408" r="13" fill="#4285F4"/>
 <text x="84" y="413" class="badge">5a</text>
 <text x="190" y="424" class="title">Google Workspace mailbox</text>
 <text x="190" y="442" class="sub">SPF / DKIM / DMARC checked,</text>
-<text x="190" y="457" class="sub">then delivered</text>
+<text x="190" y="457" class="sub">already confirmed delivering</text>
 
-<!-- Step 5b (right, Groupanizer or Groups.io) -->
-<rect x="450" y="396" width="240" height="70" rx="10" class="box" stroke="#F38020" stroke-width="2"/>
+<!-- Step 5b (right, Groupanizer/Groups.io — to build) -->
+<rect x="450" y="396" width="240" height="70" rx="10" class="box" stroke="#F38020" stroke-width="2" stroke-dasharray="6,4"/>
 <circle cx="464" cy="408" r="13" fill="#F38020"/>
 <text x="464" y="413" class="badge">5b</text>
 <text x="570" y="424" class="title" font-size="13">Either Groupanizer or Groups.io</text>
-<text x="570" y="442" class="sub">Cloudflare Email Routing rule fires,</text>
-<text x="570" y="457" class="sub">message forwarded here</text>
+<text x="570" y="442" class="sub">not yet configured —</text>
+<text x="570" y="457" class="sub">to be built and tested first</text>
 
 <!-- legend -->
 <line x1="140" y1="500" x2="170" y2="500" stroke="#4285F4" stroke-width="3"/>
-<text x="180" y="504" font-size="12" fill="#555555" text-anchor="start">Google path — preconfigured</text>
+<text x="180" y="504" font-size="12" fill="#555555" text-anchor="start">Google path — done, working today</text>
 <line x1="440" y1="500" x2="470" y2="500" stroke="#F38020" stroke-width="3"/>
-<text x="480" y="504" font-size="12" fill="#555555" text-anchor="start">Cloudflare path — preconfigured</text>
+<text x="480" y="504" font-size="12" fill="#555555" text-anchor="start">Cloudflare path — still to be built</text>
 
-<text x="380" y="536" font-size="12" fill="#888888" text-anchor="middle">Both columns are already built. Only step 2's Nameservers value decides which one actually answers.</text>
-<text x="380" y="556" font-size="12" fill="#888888" text-anchor="middle">The toggle is flipped more than once, in both directions, to confirm it switches reliably.</text>
-<text x="380" y="576" font-size="12" fill="#888888" text-anchor="middle">Once proven, the same toggle action is repeated on commonwealthchorale.net with its own real settings.</text>
+<text x="380" y="536" font-size="12" fill="#888888" text-anchor="middle">The left column is already built and tested. The right column still needs to be configured and tested on its own first.</text>
+<text x="380" y="556" font-size="12" fill="#888888" text-anchor="middle">Only once the right column works independently does the toggle get flipped back and forth, more than once, in both directions.</text>
+<text x="380" y="576" font-size="12" fill="#888888" text-anchor="middle">Proving the toggle is reliable here is what gives confidence for the real switch on commonwealthchorale.net.</text>
 
 <text x="380" y="606" font-size="10" fill="#aaaaaa" text-anchor="middle">Galen is getting a 14-day free Groupanizer trial to try, and also to see about uploading files from Donor Snap,</text>
 <text x="380" y="620" font-size="10" fill="#aaaaaa" text-anchor="middle">while Groups.io is free. Both will send emails.</text>

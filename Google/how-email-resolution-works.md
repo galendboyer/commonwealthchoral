@@ -28,12 +28,16 @@ Nothing about this domain should be touched until the toggle mechanism itself ha
 
 ---
 
-## The same picture, as a toggle test on driscollsingers.net
+## The same picture, as the actual test plan for driscollsingers.net
 
-![Numbered diagram of driscollsingers.net with both paths pre-configured and a toggle at the registrar](./driscollsingers-toggle-test-diagram.svg)
+![Numbered diagram of driscollsingers.net's toggle test plan — Google side already working, Cloudflare side still to be built](./driscollsingers-toggle-test-diagram.svg)
 
-driscollsingers.net is set up differently on purpose: both columns already exist and are fully configured — the left column (3a/4a/5a) through its existing Google Workspace setup, and the right column (3b/4b/5b) through the Email Routing rule that forwards to **either Groupanizer or Groups.io**. Neither column is "the test" and the other "the real thing" — both are equally real and equally ready to answer, which is why both are tagged preconfigured rather than one being marked active. The only thing that decides which one actually handles a given message is the Nameservers value at step 2, the same single toggle switch described throughout this document.
+Unlike the two diagrams above, the two columns here are **not** in the same state as each other. The left column (3a/4a/5a) is real, finished work — Google Workspace has been configured and tested on driscollsingers.net already, and mail is confirmed delivering through it today. The right column (3b/4b/5b) is not built yet. Nothing has been configured or tested on the Cloudflare side — no Email Routing rule, no confirmed delivery to Groupanizer or Groups.io. That column is drawn dashed for exactly that reason: it's the plan, not the current state.
 
-Both Groupanizer and Groups.io are being evaluated side by side on the right column: Galen is running a 14-day free Groupanizer trial, partly to see whether it can pull in files from Donor Snap, while Groups.io is being tried as the free alternative. Both services will send email either way, so the choice between them can be settled independently of the nameserver toggle test itself.
+The work ahead happens in two stages, in order:
 
-The point of this test is to flip that toggle back and forth — Google to Cloudflare, then Cloudflare back to Google, more than once — and confirm each time, using the header-trail method described above, that the message actually took the path the toggle said it should. Proving that the switch is reliable and repeatable in both directions is what builds confidence in flipping it for real. Once that's demonstrated on driscollsingers.net, the same action — changing the Nameservers setting, and only that setting — gets carried out on commonwealthchorale.net, using its own actual records rather than test ones, replacing the orange "ACTIVE now" arrow in the diagram above with one pointing left, at Google, instead of right toward Cloudflare.
+1. **Build and test the right column on its own first**, independent of any toggling. That means setting up Cloudflare Email Routing for driscollsingers.net, deciding between Groupanizer and Groups.io as the destination (both are being evaluated — Galen is running a 14-day free Groupanizer trial, partly to check whether it can pull in files from Donor Snap, while Groups.io is being tried as the free alternative; both will send email regardless of which is chosen), and confirming with the header-trail method described above that mail genuinely reaches that destination through Cloudflare.
+
+2. **Only once the right column works on its own** does the toggle test begin: flipping the Nameservers setting at step 2 back and forth — Google to Cloudflare, then Cloudflare back to Google — more than once, confirming each time which path actually carried the message. Successfully toggling back and forth is what proves the mechanism itself is reliable, not just that one side or the other happens to work.
+
+The entire point of doing this on driscollsingers.net first is that a successful toggle test tells Galen exactly which settings — which "cells" in GoDaddy — need to change to carry out the same switch on commonwealthchorale.net, with confidence, using its own real records rather than test ones.
