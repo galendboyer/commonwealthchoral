@@ -1,6 +1,6 @@
 <svg viewBox="0 0 760 640" xmlns="http://www.w3.org/2000/svg" role="img">
 <title>Numbered diagram: how an email to driscollsingers.net resolves through GoDaddy to either Google or Cloudflare</title>
-<desc>Step 1: sender's mail server has a message. Step 2: it queries GoDaddy, the registrar, which holds the Nameservers setting. Step 3a/3b: that setting forks to either GoDaddy's own nameservers or Cloudflare's nameservers. Step 4a/4b: whichever is authoritative answers with its own MX record, pointing to Google or to Cloudflare. Step 5a/5b: the message lands in a Google Workspace mailbox, or is forwarded by Cloudflare Email Routing to a destination inbox.</desc>
+<desc>Step 1: a sender's mail server has a message. Step 2: it queries GoDaddy, the registrar, which holds the Nameservers setting. Step 3a/3b: that setting forks to either GoDaddy's own nameservers or Cloudflare's nameservers. Step 4a/4b: whichever is authoritative answers with its own MX record, pointing to Google or to Cloudflare. Step 5a/5b: the message lands in a Google Workspace mailbox, or is forwarded by Cloudflare Email Routing to Groupanizer.</desc>
 
 <style>
   text { font-family: Arial, Helvetica, sans-serif; }
@@ -90,9 +90,9 @@
 <rect x="450" y="396" width="240" height="70" rx="10" class="box" stroke="#F38020" stroke-width="2"/>
 <circle cx="464" cy="408" r="13" fill="#F38020"/>
 <text x="464" y="413" class="badge">5b</text>
-<text x="570" y="424" class="title" font-size="14">Cloudflare Email Routing</text>
-<text x="570" y="442" class="sub">forwarding rule fires,</text>
-<text x="570" y="457" class="sub">message sent to destination inbox</text>
+<text x="570" y="424" class="title" font-size="14">Groupanizer</text>
+<text x="570" y="442" class="sub">Cloudflare Email Routing rule fires,</text>
+<text x="570" y="457" class="sub">message forwarded here</text>
 
 <!-- legend -->
 <line x1="140" y1="500" x2="170" y2="500" stroke="#4285F4" stroke-width="3"/>
@@ -101,6 +101,6 @@
 <text x="480" y="504" font-size="12" fill="#555555">Cloudflare path</text>
 
 <text x="380" y="536" font-size="12" fill="#888888" text-anchor="middle">Only one column (3a/4a/5a or 3b/4b/5b) is active at a time — set by step 2's Nameservers value.</text>
-<text x="380" y="556" font-size="12" fill="#888888" text-anchor="middle">DNS answers are cached (TTL), so a sender may still get yesterday's answer right after step 2 changes.</text>
+<text x="380" y="556" font-size="12" fill="#888888" text-anchor="middle">DNS answers are cached (TTL), so a sender may still get a stale answer right after step 2 changes.</text>
 
 </svg>
